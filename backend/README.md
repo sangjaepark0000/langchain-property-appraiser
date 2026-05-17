@@ -20,6 +20,16 @@ python -m pip install -e '.[dev]'
 
 If your machine does not have `python3.12`, use Python 3.13.
 
+## Environment Configuration
+
+Copy the committed example file before local customization:
+
+```bash
+cp ../.env.example .env
+```
+
+`.env` is for local values only and must not be committed. Provider keys are optional for local startup. If LangSmith variables are absent, tracing remains disabled and local logging remains the baseline observability path.
+
 ## Run the API Locally
 
 ```bash
@@ -48,6 +58,6 @@ source .venv/bin/activate
 pytest
 ```
 
-## Credentials Are Not Required for Story 1.1
+## Credentials Are Not Required for Local Startup
 
-The minimal app and health endpoint must start without database credentials, LLM provider keys, embedding provider keys, or LangSmith configuration. Those settings are introduced in later stories.
+The app and health endpoint start without database credentials, LLM provider keys, embedding provider keys, or LangSmith configuration. Optional secrets belong only in local `.env` or environment variables, never in committed files.
