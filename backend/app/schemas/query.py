@@ -12,6 +12,7 @@ class QueryResponse(BaseModel):
     citations: list[dict]
     data_mode: str
     insufficient_evidence: bool
+    insufficient_evidence_reason: str | None = None
     retrieved_count: int
     fallback: bool
     provider: str

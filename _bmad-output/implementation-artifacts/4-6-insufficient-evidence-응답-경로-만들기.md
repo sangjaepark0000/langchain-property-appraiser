@@ -1,6 +1,6 @@
 # Story 4.6: Insufficient evidence 응답 경로 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that 없는 근거로 그럴듯한 답변을 받지 않는다.
 
 ## Tasks / Subtasks
 
-- [ ] insufficient evidence policy/result detail 추가
-- [ ] RAG query/graph 응답에 reason 노출
-- [ ] trace summary에 insufficient evidence details 기록
-- [ ] API/CLI 정상 응답 검증
-- [ ] tests 추가
+- [x] insufficient evidence policy/result detail 추가
+- [x] RAG query/graph 응답에 reason 노출
+- [x] trace summary에 insufficient evidence details 기록
+- [x] API/CLI 정상 응답 검증
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -34,6 +34,19 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 115 passed
+
 ### Completion Notes List
 
+- Added insufficient evidence reason policy for official/domain determination questions.
+- RAG query, graph result, trace summary, and API response expose insufficient evidence reason.
+- Official/legal/appraisal insufficient paths return normal responses without fabricated sources/articles/dates.
+
 ### File List
+
+- `backend/app/rag/insufficient.py`
+- `backend/app/rag/query.py`
+- `backend/app/graph/conversation.py`
+- `backend/app/schemas/query.py`
+- `backend/app/api/routes.py`
+- `backend/tests/test_story_4_6_insufficient_evidence.py`
