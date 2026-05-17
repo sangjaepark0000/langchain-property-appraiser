@@ -1,6 +1,6 @@
 # Story 4.8: 3턴 대화 smoke test 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,12 +16,12 @@ so that conversation state, retrieval grading, rewrite, insufficient evidence �
 
 ## Tasks / Subtasks
 
-- [ ] multi-turn smoke script 추가
-- [ ] sample ingestion + 3 chat calls 자동화
-- [ ] messages/traces 검증
-- [ ] insufficient/rewrite path 검증
-- [ ] README 문서화
-- [ ] tests 추가
+- [x] multi-turn smoke script 추가
+- [x] sample ingestion + 3 chat calls 자동화
+- [x] messages/traces 검증
+- [x] insufficient/rewrite path 검증
+- [x] README 문서화
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -35,6 +35,16 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 120 passed
+
 ### Completion Notes List
 
+- Added `scripts/multiturn_smoke.py` for local 3-turn CRAG smoke.
+- Smoke ingests sample fixture, runs `/chat` for three turns in one conversation, verifies 6 messages and 3 retrieval traces.
+- Smoke validates insufficient evidence/rewrite path without LangSmith or fabricated official legal sources.
+
 ### File List
+
+- `backend/scripts/multiturn_smoke.py`
+- `backend/tests/test_story_4_8_multiturn_smoke.py`
+- `backend/README.md`
