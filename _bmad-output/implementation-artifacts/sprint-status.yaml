@@ -50,7 +50,7 @@ development_status:
   1-6-로컬-로그와-개발자-smoke-command-만들기: done
   epic-1-retrospective: done
 
-  epic-2: in-progress
+  epic-2: done
   2-1-document와-chunk-저장-모델-만들기: done
   2-2-markdown-txt-loader와-canonical-document-변환-만들기: done
   2-3-chunking과-metadata-enrichment-만들기: done
@@ -58,7 +58,7 @@ development_status:
   2-5-ingestion-service와-cli-smoke-command-만들기: done
   2-6-source-inventory-상태와-ingestion-결과-연결하기: done
   2-7-공식-공개-데이터-source-조사와-수집-방식-기록하기: done
-  epic-2-retrospective: optional
+  epic-2-retrospective: done
 
   epic-3: backlog
   3-1-rag-smoke-test용-sample-knowledge-fixture-만들기: backlog
