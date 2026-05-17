@@ -113,6 +113,26 @@ cd backend
 python -m alembic -c alembic.ini upgrade head
 ```
 
+## Smoke Check
+
+Run the minimal backend smoke check from `backend/`:
+
+```bash
+cd backend
+source .venv/bin/activate
+python scripts/smoke.py
+```
+
+The smoke check verifies:
+
+- FastAPI app import
+- `/health` endpoint response
+- local settings summary
+- optional LangSmith tracing disabled/enabled state
+- no LLM or embedding provider key is required
+
+The smoke command does not print raw secret values. Database connectivity remains a separate check via `python scripts/check_db.py` so the smoke command can pass before ingestion and DB-backed features are implemented.
+
 ## Run Tests
 
 ```bash
