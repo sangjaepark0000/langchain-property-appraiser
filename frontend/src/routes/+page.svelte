@@ -1,31 +1,25 @@
 <script lang="ts">
   import { sendChatMessage } from '$lib/api/chat';
+  import ChatInput from '$lib/components/ChatInput.svelte';
+  import MessageList, { type ChatMessage } from '$lib/components/MessageList.svelte';
 
-  type Message = {
-    role: 'assistant' | 'user';
-    content: string;
-  };
-
-  let question = '';
   let status = 'Ready';
+  let isSubmitting = false;
   let conversationId: number | undefined;
-  let messages: Message[] = [
+  let messages: ChatMessage[] = [
     {
       role: 'assistant',
       content: 'Ask a property appraisal question to start a grounded conversation.'
     }
   ];
 
-  async function submitQuestion() {
-    const trimmed = question.trim();
-    if (!trimmed) return;
-
-    messages = [...messages, { role: 'user', content: trimmed }];
-    question = '';
+  async function submitQuestion(question: string) {
+    messages = [...messages, { role: 'user', content: question }];
     status = 'Waiting for backend /chat response...';
+    isSubmitting = true;
 
     try {
-      const response = await sendChatMessage({ question: trimmed, conversation_id: conversationId });
+      const response = await sendChatMessage({ question, conversation_id: conversationId });
       conversationId = response.conversation_id;
       messages = [...messages, { role: 'assistant', content: response.answer }];
       status = response.insufficient_evidence
@@ -33,6 +27,8 @@
         : `Answered from ${response.data_mode} data`;
     } catch (error) {
       status = error instanceof Error ? error.message : 'Unexpected chat error';
+    } finally {
+      isSubmitting = false;
     }
   }
 </script>
@@ -49,22 +45,12 @@
   </section>
 
   <section class="chat-panel" aria-label="Chat workspace">
-    <div class="messages" data-testid="message-list" aria-live="polite">
-      {#each messages as message}
-        <article class:assistant={message.role === 'assistant'} class:user={message.role === 'user'}>
-          <span>{message.role}</span>
-          <p>{message.content}</p>
-        </article>
-      {/each}
+    <div data-testid="message-list">
+      <MessageList {messages} />
     </div>
-
-    <form class="composer" data-testid="chat-input" on:submit|preventDefault={submitQuestion}>
-      <label for="question">Question</label>
-      <div>
-        <input id="question" bind:value={question} placeholder="Ask about a property or appraisal basis" />
-        <button type="submit">Send</button>
-      </div>
-    </form>
+    <div data-testid="chat-input">
+      <ChatInput onSubmit={submitQuestion} disabled={isSubmitting} />
+    </div>
 
     <aside class="status" data-testid="status-panel" aria-label="Status panel">
       <strong>Status</strong>
@@ -115,75 +101,9 @@
     overflow: hidden;
   }
 
-  .messages {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1.5rem;
-    overflow: auto;
-  }
-
-  article {
-    max-width: 70ch;
-    border-radius: 1rem;
-    padding: 1rem;
-  }
-
-  article span {
-    display: block;
-    margin-bottom: 0.35rem;
-    font-size: 0.78rem;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-
-  article p {
-    margin: 0;
-  }
-
-  .assistant {
-    align-self: flex-start;
-    background: #eef3ff;
-  }
-
-  .user {
-    align-self: flex-end;
-    background: #18223a;
-    color: white;
-  }
-
-  .composer,
   .status {
     border-top: 1px solid #dfe5ef;
     padding: 1rem 1.5rem;
-  }
-
-  .composer label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-  }
-
-  .composer div {
-    display: flex;
-    gap: 0.75rem;
-  }
-
-  input {
-    flex: 1;
-    border: 1px solid #c9d3e3;
-    border-radius: 999px;
-    padding: 0.8rem 1rem;
-  }
-
-  button {
-    border: 0;
-    border-radius: 999px;
-    background: #4968d8;
-    color: white;
-    cursor: pointer;
-    font-weight: 700;
-    padding: 0.8rem 1.2rem;
   }
 
   .status p {
