@@ -1,6 +1,6 @@
 # Story 4.5: Query rewrite와 re-retrieval 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,12 +16,12 @@ so that 한 번의 검색 실패로 바로 포기하지 않을 수 있다.
 
 ## Tasks / Subtasks
 
-- [ ] query rewrite provider/fallback 추가
-- [ ] RAG query re-retrieval orchestration 추가
-- [ ] retrieval trace rewritten fields 연결
-- [ ] retry limit 설정 추가
-- [ ] graph result/assistant metadata에 rewrite 상태 포함
-- [ ] tests 추가
+- [x] query rewrite provider/fallback 추가
+- [x] RAG query re-retrieval orchestration 추가
+- [x] retrieval trace rewritten fields 연결
+- [x] retry limit 설정 추가
+- [x] graph result/assistant metadata에 rewrite 상태 포함
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -35,6 +35,18 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 111 passed
+
 ### Completion Notes List
 
+- Added deterministic query rewrite fallback preserving original query.
+- RAG query now re-retrieves after weak/irrelevant initial grading within retry limit.
+- Retrieval traces record rewritten query, re-retrieved chunk ids, rewrite status/fallback, and attempt count.
+- Conversation graph exposes rewrite state and persists it in assistant message metadata.
+
 ### File List
+
+- `backend/app/rag/rewrite.py`
+- `backend/app/rag/query.py`
+- `backend/app/graph/conversation.py`
+- `backend/tests/test_story_4_5_query_rewrite.py`
