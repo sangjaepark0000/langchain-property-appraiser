@@ -1,6 +1,6 @@
 # Story 4.3: LangGraph conversation state 기본 흐름 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,12 +16,12 @@ so that 멀티턴 질문에서 이전 대화 맥락을 사용할 수 있다.
 
 ## Tasks / Subtasks
 
-- [ ] Conversation graph state schema 추가
-- [ ] LangGraph runtime 구성
-- [ ] message history 로드/기록 노드 추가
-- [ ] RAG query 재사용 노드 추가
-- [ ] local transition logging 추가
-- [ ] tests 추가
+- [x] Conversation graph state schema 추가
+- [x] LangGraph runtime 구성
+- [x] message history 로드/기록 노드 추가
+- [x] RAG query 재사용 노드 추가
+- [x] local transition logging 추가
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -36,6 +36,17 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 103 passed
+
 ### Completion Notes List
 
+- Added LangGraph conversation runtime with start, load_history, rag_answer, and persist_assistant nodes.
+- First question creates conversation and records user/assistant messages.
+- Follow-up question loads prior history and appends messages to the existing conversation.
+- Added local node transition logging without LangSmith dependency.
+
 ### File List
+
+- `backend/app/graph/__init__.py`
+- `backend/app/graph/conversation.py`
+- `backend/tests/test_story_4_3_conversation_graph.py`
