@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 DATA_MODE_VALUES = ("sample", "official", "user_provided", "unknown")
-INGESTION_STATUS_VALUES = ("loaded", "skipped", "unsupported", "failed")
+INGESTION_STATUS_VALUES = ("loaded", "ingested", "skipped", "unsupported", "failed")
 
 
 class Document(Base):
@@ -25,7 +25,7 @@ class Document(Base):
             name="ck_documents_data_mode",
         ),
         CheckConstraint(
-            "ingestion_status IN ('loaded', 'skipped', 'unsupported', 'failed')",
+            "ingestion_status IN ('loaded', 'ingested', 'skipped', 'unsupported', 'failed')",
             name="ck_documents_ingestion_status",
         ),
     )

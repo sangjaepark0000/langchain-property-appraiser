@@ -80,7 +80,7 @@ def persist_ingested_item(item: IngestedItem, session: Session) -> int:
         source_name=doc.source_name,
         source_type=doc.source_type,
         data_mode=doc.data_mode,
-        ingestion_status=doc.status,
+        ingestion_status="ingested",
         metadata_=doc.metadata,
     )
     session.add(document_model)
