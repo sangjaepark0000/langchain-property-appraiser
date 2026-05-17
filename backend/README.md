@@ -131,6 +131,12 @@ python scripts/ingest_file.py ../sample_data/sample-property-notes.md
 python scripts/list_ingested.py
 ```
 
+Ask a single local RAG smoke question after ingestion:
+
+```bash
+python scripts/rag_query.py "What roof color is stated for Fictional Parcel Alpha?" --debug
+```
+
 Unsupported files are reported in `unsupported_files` and are not counted as successful ingestion. The CLI also prints one source-level summary line per file with `status`, `documents`, `chunks`, and failure reason when present.
 
 ## Smoke Check
