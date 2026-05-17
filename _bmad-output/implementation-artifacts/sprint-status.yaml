@@ -55,7 +55,7 @@ development_status:
   2-2-markdown-txt-loader와-canonical-document-변환-만들기: done
   2-3-chunking과-metadata-enrichment-만들기: done
   2-4-embedding-provider-abstraction과-fallback-만들기: done
-  2-5-ingestion-service와-cli-smoke-command-만들기: backlog
+  2-5-ingestion-service와-cli-smoke-command-만들기: atdd-done
   2-6-source-inventory-상태와-ingestion-결과-연결하기: backlog
   2-7-공식-공개-데이터-source-조사와-수집-방식-기록하기: backlog
   epic-2-retrospective: optional
