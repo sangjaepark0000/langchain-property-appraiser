@@ -708,6 +708,30 @@ So that 이후 CRAG와 웹 UI 구현 전에 regression을 줄일 수 있다.
 **Then** answer, citations, data_mode, insufficient_evidence 필드가 존재함을 검증한다
 **And** 이후 frontend와 CRAG story가 같은 contract를 신뢰할 수 있다.
 
+### Story 3.9: pgvector-backed chunk embedding 저장과 검색 만들기
+
+**GH Issue:** TBD
+
+As a 개발자,
+I want chunk embedding을 pgvector column에 저장하고 PostgreSQL/pgvector 검색 경로를 사용할 수 있게 하고 싶다,
+So that RAG retrieval이 smoke용 JSON metadata fallback에서 production-oriented vector storage로 발전할 수 있다.
+
+**Acceptance Criteria:**
+
+**Given** chunk embedding이 생성된다
+**When** ingestion persistence가 실행된다
+**Then** embedding은 기존 metadata fallback과 pgvector-backed `chunks.embedding` column 양쪽에 저장된다.
+
+**Given** PostgreSQL/pgvector dialect가 사용된다
+**When** retriever가 검색을 수행한다
+**Then** vector column 기반 검색 경로를 우선 사용한다
+**And** sqlite/local smoke에서는 metadata cosine fallback이 유지된다.
+
+**Given** embedding dimension 설정이 있다
+**When** vector column migration과 fake embedding이 사용된다
+**Then** 기본 dimension은 local fake provider와 일치한다
+**And** pgvector extension, vector column, vector index가 migration으로 관리된다.
+
 ## Epic 4: Multi-Turn CRAG Conversation Runtime
 
 사용자는 멀티턴 대화에서 이전 문맥을 유지하며 후속 질문을 할 수 있고, 시스템은 검색 결과를 평가해 query rewrite, re-retrieval, insufficient evidence 응답, retrieval trace를 제공할 수 있다.
