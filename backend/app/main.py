@@ -1,10 +1,13 @@
 from fastapi import FastAPI
 
+from app.core.config import get_settings
+
 
 SERVICE_NAME = "langchain-property-appraiser-backend"
+settings = get_settings()
 
 app = FastAPI(
-    title="LangChain Property Appraiser Backend",
+    title=settings.app_name,
     version="0.1.0",
     description="Local-first FastAPI backend foundation for RAG development.",
 )

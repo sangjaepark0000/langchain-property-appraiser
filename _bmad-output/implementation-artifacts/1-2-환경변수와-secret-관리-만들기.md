@@ -1,6 +1,6 @@
 # Story 1.2: 환경변수와 secret 관리 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,29 +16,29 @@ so that secret과 provider 설정을 코드에 하드코딩하지 않고 관리�
 
 ## Tasks / Subtasks
 
-- [ ] Typed settings module 추가 (AC: 1, 3)
-  - [ ] `pydantic-settings` 의존성 추가
-  - [ ] `backend/app/core/config.py` 생성
-  - [ ] Settings class에서 env와 `.env` 로딩 지원
-  - [ ] provider key와 LangSmith 설정은 optional로 선언
-  - [ ] LangSmith/tracing enabled 값은 key가 없으면 false가 되도록 구현
-- [ ] `.env.example` 추가 (AC: 2)
-  - [ ] root `.env.example` 생성
-  - [ ] database URL, LLM provider, embedding provider, LangSmith 설정 문서화
-  - [ ] 실제 secret처럼 보이는 값 대신 placeholder/safe default만 사용
-- [ ] FastAPI startup 안전성 유지 (AC: 1, 3)
-  - [ ] `backend/app/main.py`가 settings를 import/load해도 missing optional secrets로 실패하지 않게 유지
-  - [ ] health endpoint 또는 app state에 non-secret 설정 summary만 노출 가능
-  - [ ] secret 값은 response/log에 노출하지 않음
-- [ ] 문서 업데이트 (AC: 2, 3)
-  - [ ] `backend/README.md`에 `.env.example` 복사/사용법 추가
-  - [ ] LangSmith 미설정 시 tracing disabled와 local logging baseline 설명
-- [ ] 테스트 추가/업데이트 (AC: 1, 2, 3)
-  - [ ] minimal environment에서 settings instantiate 테스트
-  - [ ] env override 테스트
-  - [ ] LangSmith key 없음 → tracing disabled 테스트
-  - [ ] `.env.example` 필수 키와 placeholder 안전성 테스트
-  - [ ] 기존 health/import 테스트 유지
+- [x] Typed settings module 추가 (AC: 1, 3)
+  - [x] `pydantic-settings` 의존성 추가
+  - [x] `backend/app/core/config.py` 생성
+  - [x] Settings class에서 env와 `.env` 로딩 지원
+  - [x] provider key와 LangSmith 설정은 optional로 선언
+  - [x] LangSmith/tracing enabled 값은 key가 없으면 false가 되도록 구현
+- [x] `.env.example` 추가 (AC: 2)
+  - [x] root `.env.example` 생성
+  - [x] database URL, LLM provider, embedding provider, LangSmith 설정 문서화
+  - [x] 실제 secret처럼 보이는 값 대신 placeholder/safe default만 사용
+- [x] FastAPI startup 안전성 유지 (AC: 1, 3)
+  - [x] `backend/app/main.py`가 settings를 import/load해도 missing optional secrets로 실패하지 않게 유지
+  - [x] health endpoint 또는 app state에 non-secret 설정 summary만 노출 가능
+  - [x] secret 값은 response/log에 노출하지 않음
+- [x] 문서 업데이트 (AC: 2, 3)
+  - [x] `backend/README.md`에 `.env.example` 복사/사용법 추가
+  - [x] LangSmith 미설정 시 tracing disabled와 local logging baseline 설명
+- [x] 테스트 추가/업데이트 (AC: 1, 2, 3)
+  - [x] minimal environment에서 settings instantiate 테스트
+  - [x] env override 테스트
+  - [x] LangSmith key 없음 → tracing disabled 테스트
+  - [x] `.env.example` 필수 키와 placeholder 안전성 테스트
+  - [x] 기존 health/import 테스트 유지
 
 ## Dev Notes
 
@@ -103,6 +103,19 @@ TBD by dev agent
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 9 passed
+
 ### Completion Notes List
 
+- Added typed `pydantic-settings` configuration with optional provider and LangSmith settings.
+- Added root `.env.example` with safe placeholders and documented local `.env` usage.
+- Preserved no-credential FastAPI startup and health endpoint behavior.
+
 ### File List
+
+- `.env.example`
+- `backend/README.md`
+- `backend/pyproject.toml`
+- `backend/app/main.py`
+- `backend/app/core/config.py`
+- `backend/tests/test_story_1_2_settings.py`
