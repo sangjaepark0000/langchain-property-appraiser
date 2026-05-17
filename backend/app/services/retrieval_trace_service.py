@@ -31,6 +31,7 @@ def create_retrieval_trace(
     rewritten_query: str | None = None,
     rewritten_retrieved_chunk_ids: list[int] | None = None,
     insufficient_evidence_reason: str | None = None,
+    extra_summary: dict | None = None,
 ) -> RetrievalTrace:
     summary = {
         "retrieved_count": len(retrieved_chunk_ids),
@@ -39,6 +40,8 @@ def create_retrieval_trace(
         "relevance_result": relevance_result,
         "has_insufficient_evidence_reason": insufficient_evidence_reason is not None,
     }
+    if extra_summary:
+        summary.update(extra_summary)
     trace = RetrievalTrace(
         conversation_id=conversation_id,
         message_id=message_id,

@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.models.message import Message
 from app.rag.answer import AnswerResult
+from app.rag.grading import RetrievalGrade
 from app.rag.query import answer_question
 from app.services.conversation_service import append_message, get_message_history
 
@@ -18,15 +19,19 @@ logger = logging.getLogger(__name__)
 class ConversationGraphState(TypedDict, total=False):
     question: str
     conversation_id: int | None
+    message_id: int | None
     query_vector: list[float] | None
+    min_retrieval_score: float
     history: list[Message]
     answer: AnswerResult
+    grading: RetrievalGrade
 
 
 @dataclass(frozen=True)
 class ConversationGraphResult:
     conversation_id: int
     answer: AnswerResult
+    grading: RetrievalGrade
     history: list[Message] = field(default_factory=list)
 
 
@@ -49,6 +54,7 @@ def build_conversation_graph(session: Session):
             content=state["question"],
         )
         state["conversation_id"] = created.conversation_id
+        state["message_id"] = created.message.id
         return state
 
     def load_history(state: ConversationGraphState) -> ConversationGraphState:
@@ -62,8 +68,12 @@ def build_conversation_graph(session: Session):
             session,
             state["question"],
             query_vector=state.get("query_vector"),
+            min_retrieval_score=state.get("min_retrieval_score", 0.0),
+            conversation_id=state.get("conversation_id"),
+            message_id=state.get("message_id"),
         )
         state["answer"] = rag_result.answer
+        state["grading"] = rag_result.grading
         return state
 
     def persist_assistant(state: ConversationGraphState) -> ConversationGraphState:
@@ -79,6 +89,7 @@ def build_conversation_graph(session: Session):
                 "fallback": state["answer"].fallback,
                 "provider": state["answer"].provider,
                 "citations": state["answer"].citations,
+                "retrieval_grading": state["grading"].status,
             },
         )
         return state
@@ -102,6 +113,7 @@ def run_conversation_graph(
     question: str,
     conversation_id: int | None = None,
     query_vector: list[float] | None = None,
+    min_retrieval_score: float = 0.0,
 ) -> ConversationGraphResult:
     graph = build_conversation_graph(session)
     final_state = graph.invoke(
@@ -109,10 +121,12 @@ def run_conversation_graph(
             "question": question,
             "conversation_id": conversation_id,
             "query_vector": query_vector,
+            "min_retrieval_score": min_retrieval_score,
         }
     )
     return ConversationGraphResult(
         conversation_id=final_state["conversation_id"],
         answer=final_state["answer"],
+        grading=final_state["grading"],
         history=final_state.get("history", []),
     )

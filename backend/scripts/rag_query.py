@@ -11,7 +11,10 @@ if str(BACKEND_ROOT) not in sys.path:
 from app.db.base import Base
 from app.db.session import SessionLocal, engine
 from app.models.chunk import Chunk  # noqa: F401 - ensure table registration for CLI create_all
+from app.models.conversation import Conversation  # noqa: F401 - ensure table registration for CLI create_all
 from app.models.document import Document  # noqa: F401 - ensure table registration for CLI create_all
+from app.models.message import Message  # noqa: F401 - ensure table registration for CLI create_all
+from app.models.retrieval_trace import RetrievalTrace  # noqa: F401 - ensure table registration for CLI create_all
 from app.rag.query import answer_question
 
 

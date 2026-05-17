@@ -4,6 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from app.db.base import Base
 from app.models.chunk import Chunk
 from app.models.document import Document
+from app.models.conversation import Conversation  # noqa: F401
+from app.models.message import Message  # noqa: F401
 from app.models.retrieval_trace import RetrievalTrace
 from app.rag.retriever import RetrievalResult
 

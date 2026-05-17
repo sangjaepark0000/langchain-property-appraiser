@@ -1,6 +1,6 @@
 # Story 4.4: Retrieval grading 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that 관련 없는 근거로 답변하지 않도록 할 수 있다.
 
 ## Tasks / Subtasks
 
-- [ ] retrieval grading module 추가
-- [ ] trace recording에 grading 결과 연결
-- [ ] graph runtime에 grading node 추가
-- [ ] weak/irrelevant path를 insufficient evidence로 안전 처리
-- [ ] tests 추가
+- [x] retrieval grading module 추가
+- [x] trace recording에 grading 결과 연결
+- [x] graph runtime에 grading node 추가
+- [x] weak/irrelevant path를 insufficient evidence로 안전 처리
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -34,6 +34,20 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 107 passed
+
 ### Completion Notes List
 
+- Added retrieval grading with sufficient/weak/irrelevant classifications.
+- RAG query records retrieval trace with grading status, max score, and insufficient evidence reason.
+- Conversation graph exposes grading and safely returns insufficient evidence for irrelevant retrieval.
+
 ### File List
+
+- `backend/app/rag/grading.py`
+- `backend/app/rag/query.py`
+- `backend/app/graph/conversation.py`
+- `backend/app/services/retrieval_trace_service.py`
+- `backend/app/models/retrieval_trace.py`
+- `backend/scripts/rag_query.py`
+- `backend/tests/test_story_4_4_retrieval_grading.py`
