@@ -48,7 +48,7 @@ development_status:
   1-4-sqlalchemy와-alembic-migration-기반-만들기: done
   1-5-source-inventory와-canonical-schema-문서-초안-만들기: done
   1-6-로컬-로그와-개발자-smoke-command-만들기: done
-  epic-1-retrospective: optional
+  epic-1-retrospective: done
 
   epic-2: backlog
   2-1-document와-chunk-저장-모델-만들기: backlog
