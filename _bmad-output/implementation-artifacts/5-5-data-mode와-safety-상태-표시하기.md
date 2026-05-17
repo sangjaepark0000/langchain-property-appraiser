@@ -1,6 +1,6 @@
 # Story 5.5: Data mode와 safety 상태 표시하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,10 +16,10 @@ so that 샘플 답변과 공식 검토 결과를 혼동하지 않을 수 있다.
 
 ## Tasks / Subtasks
 
-- [ ] DataModeNotice component 추가
-- [ ] assistant message에 data_mode/insufficient evidence metadata 연결
-- [ ] sample/unknown notice와 safety notice 표시
-- [ ] tests 추가
+- [x] DataModeNotice component 추가
+- [x] assistant message에 data_mode/insufficient evidence metadata 연결
+- [x] sample/unknown notice와 safety notice 표시
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -33,6 +33,17 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 136 passed
+
 ### Completion Notes List
 
+- Added data mode/safety notice for assistant responses.
+- Assistant messages carry backend data_mode and insufficient evidence reason.
+- sample/unknown data is explicitly marked as not an official determination/reference aid only.
+
 ### File List
+
+- `frontend/src/lib/components/DataModeNotice.svelte`
+- `frontend/src/lib/components/MessageList.svelte`
+- `frontend/src/routes/+page.svelte`
+- `backend/tests/test_story_5_5_frontend_data_mode_safety.py`

@@ -1,10 +1,13 @@
 <script lang="ts">
   import CitationPanel, { type Citation } from './CitationPanel.svelte';
+  import DataModeNotice from './DataModeNotice.svelte';
 
   export type ChatMessage = {
     role: 'assistant' | 'user';
     content: string;
     citations?: Citation[];
+    dataMode?: string;
+    insufficientEvidenceReason?: string | null;
   };
 
   type Props = {
@@ -19,6 +22,10 @@
     <article class:assistant={message.role === 'assistant'} class:user={message.role === 'user'}>
       <span>{message.role}</span>
       <p class="answer-body">{message.content}</p>
+      {#if message.role === 'assistant'}
+        <DataModeNotice dataMode={message.dataMode} insufficientEvidenceReason={message.insufficientEvidenceReason} />
+        <p class="safety-copy">Reference aid only; do not treat this as a legal violation or appraisal appropriateness determination.</p>
+      {/if}
       {#if message.role === 'assistant' && message.citations}
         <CitationPanel citations={message.citations} />
       {/if}
@@ -51,6 +58,12 @@
 
   .answer-body {
     margin: 0;
+  }
+
+  .safety-copy {
+    margin: 0.65rem 0 0;
+    color: #53617a;
+    font-size: 0.9rem;
   }
 
   .assistant {
