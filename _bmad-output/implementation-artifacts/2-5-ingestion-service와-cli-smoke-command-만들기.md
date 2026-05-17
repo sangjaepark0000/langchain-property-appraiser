@@ -1,6 +1,6 @@
 # Story 2.5: Ingestion service와 CLI smoke command 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,12 +16,12 @@ so that 웹 UI 없이 문서를 지식베이스에 적재하는 흐름을 검증
 
 ## Tasks / Subtasks
 
-- [ ] ingestion service 추가
-- [ ] DB 저장 구현
-- [ ] CLI smoke command 추가
-- [ ] debug/list command 추가
-- [ ] sample data 추가
-- [ ] 테스트 추가
+- [x] ingestion service 추가
+- [x] DB 저장 구현
+- [x] CLI smoke command 추가
+- [x] debug/list command 추가
+- [x] sample data 추가
+- [x] 테스트 추가
 
 ## Dev Notes
 
@@ -36,6 +36,21 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 47 passed
+- DB-backed ingestion smoke → 1 document, 1 chunk persisted and listed
+
 ### Completion Notes List
 
+- Added ingestion service orchestrating loader, chunker, embedding fallback, and optional DB persistence.
+- Added CLI commands for ingestion and DB inspection.
+- Added sample data and README instructions.
+
 ### File List
+
+- `backend/app/services/ingest_service.py`
+- `backend/scripts/ingest_file.py`
+- `backend/scripts/list_ingested.py`
+- `backend/README.md`
+- `sample_data/README.md`
+- `sample_data/sample-property-notes.md`
+- `backend/tests/test_story_2_5_ingestion_service.py`
