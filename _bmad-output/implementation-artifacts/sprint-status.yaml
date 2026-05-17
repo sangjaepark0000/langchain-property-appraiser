@@ -65,7 +65,7 @@ development_status:
   3-2-vector-retrieval-기본-검색-만들기: done
   3-3-citation과-source-metadata-포함-검색-결과-만들기: done
   3-4-근거-기반-answer-composer-만들기: done
-  3-5-단일-질문-rag-cli-smoke-command-만들기: backlog
+  3-5-단일-질문-rag-cli-smoke-command-만들기: atdd-done
   3-6-post-chat-또는-query-기본-rag-api-만들기: backlog
   3-7-rag-response-safety-policy-적용하기: backlog
   3-8-rag-api-cli-smoke-test-자동화하기: backlog
