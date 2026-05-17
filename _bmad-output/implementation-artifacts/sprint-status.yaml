@@ -51,7 +51,7 @@ development_status:
   epic-1-retrospective: done
 
   epic-2: in-progress
-  2-1-document와-chunk-저장-모델-만들기: review
+  2-1-document와-chunk-저장-모델-만들기: done
   2-2-markdown-txt-loader와-canonical-document-변환-만들기: backlog
   2-3-chunking과-metadata-enrichment-만들기: backlog
   2-4-embedding-provider-abstraction과-fallback-만들기: backlog
