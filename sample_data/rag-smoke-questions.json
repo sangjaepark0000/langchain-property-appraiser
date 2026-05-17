@@ -1,0 +1,23 @@
+[
+  {
+    "id": "alpha-roof-color",
+    "question": "What roof color is stated for Fictional Parcel Alpha?",
+    "expected_outcome": "answer_with_evidence",
+    "expected_answer_contains": ["blue roof"],
+    "expected_source_path": "sample_data/sample-property-alpha.md"
+  },
+  {
+    "id": "beta-access-road",
+    "question": "What access road is mentioned for Fictional Parcel Beta?",
+    "expected_outcome": "answer_with_evidence",
+    "expected_answer_contains": ["north access road"],
+    "expected_source_path": "sample_data/sample-property-beta.md"
+  },
+  {
+    "id": "official-law-question-no-evidence",
+    "question": "What does the official appraisal regulation say about this parcel?",
+    "expected_outcome": "insufficient_evidence",
+    "expected_answer_contains": ["insufficient evidence", "no official data"],
+    "expected_source_path": null
+  }
+]
