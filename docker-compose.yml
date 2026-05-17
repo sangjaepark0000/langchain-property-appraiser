@@ -1,7 +1,6 @@
 services:
   db:
     image: pgvector/pgvector:pg16
-    container_name: langchain-property-appraiser-db
     environment:
       POSTGRES_DB: langchain_property_appraiser
       POSTGRES_USER: app
