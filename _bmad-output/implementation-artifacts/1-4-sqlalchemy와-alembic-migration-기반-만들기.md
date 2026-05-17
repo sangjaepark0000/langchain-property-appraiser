@@ -1,6 +1,6 @@
 # Story 1.4: SQLAlchemy와 Alembic migration 기반 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,29 +16,29 @@ so that future RAG entities를 controlled migration으로 추가할 수 있다.
 
 ## Tasks / Subtasks
 
-- [ ] SQLAlchemy/Alembic 의존성 추가 (AC: 1)
-  - [ ] SQLAlchemy 2.x 추가
-  - [ ] Alembic 추가
-- [ ] DB foundation module 생성 (AC: 1)
-  - [ ] `backend/app/db/base.py` 생성
-  - [ ] `backend/app/db/session.py` 생성
-  - [ ] settings의 `DATABASE_URL` 사용
-  - [ ] SQLAlchemy models와 Pydantic schemas 분리 원칙 유지
-- [ ] Alembic 설정 추가 (AC: 1, 2)
-  - [ ] `backend/alembic.ini` 또는 backend-local alembic config 추가
-  - [ ] `backend/alembic/env.py`에서 app settings와 metadata 사용
-  - [ ] `backend/alembic/versions/` 생성
-- [ ] baseline migration 추가 (AC: 2, 3)
-  - [ ] baseline revision 생성
-  - [ ] domain/future table을 만들지 않음
-  - [ ] `alembic upgrade head` 시 version table만 기록되게 유지
-- [ ] 문서 업데이트 (AC: 2)
-  - [ ] local DB 실행 후 migration 실행 명령 문서화
-  - [ ] reset 후 migration 재실행 절차 문서화
-- [ ] 테스트 추가/업데이트 (AC: 1, 2, 3)
-  - [ ] Alembic config/env가 settings와 metadata를 import하는지 정적 검증
-  - [ ] baseline migration이 domain table을 생성하지 않는지 검증
-  - [ ] 선택적 DB integration: local DB 사용 가능 시 `alembic upgrade head` 검증
+- [x] SQLAlchemy/Alembic 의존성 추가 (AC: 1)
+  - [x] SQLAlchemy 2.x 추가
+  - [x] Alembic 추가
+- [x] DB foundation module 생성 (AC: 1)
+  - [x] `backend/app/db/base.py` 생성
+  - [x] `backend/app/db/session.py` 생성
+  - [x] settings의 `DATABASE_URL` 사용
+  - [x] SQLAlchemy models와 Pydantic schemas 분리 원칙 유지
+- [x] Alembic 설정 추가 (AC: 1, 2)
+  - [x] `backend/alembic.ini` 또는 backend-local alembic config 추가
+  - [x] `backend/alembic/env.py`에서 app settings와 metadata 사용
+  - [x] `backend/alembic/versions/` 생성
+- [x] baseline migration 추가 (AC: 2, 3)
+  - [x] baseline revision 생성
+  - [x] domain/future table을 만들지 않음
+  - [x] `alembic upgrade head` 시 version table만 기록되게 유지
+- [x] 문서 업데이트 (AC: 2)
+  - [x] local DB 실행 후 migration 실행 명령 문서화
+  - [x] reset 후 migration 재실행 절차 문서화
+- [x] 테스트 추가/업데이트 (AC: 1, 2, 3)
+  - [x] Alembic config/env가 settings와 metadata를 import하는지 정적 검증
+  - [x] baseline migration이 domain table을 생성하지 않는지 검증
+  - [x] 선택적 DB integration: local DB 사용 가능 시 `alembic upgrade head` 검증
 
 ## Dev Notes
 
@@ -77,6 +77,24 @@ TBD by dev agent
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 19 passed
+- `docker compose up -d db && cd backend && python -m alembic -c alembic.ini upgrade head` → baseline version recorded (`20260517_0001`)
+
 ### Completion Notes List
 
+- Added SQLAlchemy/Alembic dependencies and DB base/session foundation.
+- Added Alembic environment using application settings and `Base.metadata`.
+- Added empty baseline migration that creates no domain tables.
+- Removed fixed Docker `container_name` to avoid conflicts across worktrees/projects.
+
 ### File List
+
+- `docker-compose.yml`
+- `backend/README.md`
+- `backend/pyproject.toml`
+- `backend/app/db/base.py`
+- `backend/app/db/session.py`
+- `backend/alembic.ini`
+- `backend/alembic/env.py`
+- `backend/alembic/versions/20260517_0001_baseline.py`
+- `backend/tests/test_story_1_4_alembic_foundation.py`

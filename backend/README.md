@@ -92,6 +92,27 @@ The local compose defaults match `../.env.example`:
 DATABASE_URL=postgresql+psycopg://app:app@localhost:5432/langchain_property_appraiser
 ```
 
+## Database Migrations
+
+After starting the local database, run the baseline migration from `backend/`:
+
+```bash
+cd backend
+source .venv/bin/activate
+python -m alembic -c alembic.ini upgrade head
+```
+
+The initial baseline migration intentionally creates no domain tables. It only establishes Alembic version tracking so later stories can add controlled migrations.
+
+After resetting local database state:
+
+```bash
+docker compose down -v
+docker compose up -d db
+cd backend
+python -m alembic -c alembic.ini upgrade head
+```
+
 ## Run Tests
 
 ```bash
