@@ -88,7 +88,7 @@ development_status:
   5-2-chat-input과-message-list-만들기: done
   5-3-backend-chat-api-연결하기: done
   5-4-citation과-source-panel-표시하기: done
-  5-5-data-mode와-safety-상태-표시하기: review
+  5-5-data-mode와-safety-상태-표시하기: done
   5-6-loading-error-insufficient-evidence-상태-표시하기: backlog
   5-7-3턴-웹-채팅-smoke-test-만들기: backlog
   epic-5-retrospective: optional
