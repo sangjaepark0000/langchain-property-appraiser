@@ -1,6 +1,6 @@
 # Story 1.5: Source inventory와 canonical schema 문서 초안 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,20 +16,20 @@ so that supported, unsupported, sample, official, user-provided data를 처음�
 
 ## Tasks / Subtasks
 
-- [ ] `docs/source-inventory.md` 작성 (AC: 1, 2)
-  - [ ] 목적, 범위, source status 정의
-  - [ ] supported/unsupported/deferred/ingested/failed 상태 설명
-  - [ ] source별 예상 필드와 초기 inventory table 추가
-  - [ ] unsupported/deferred가 성공 ingestion처럼 처리되지 않는 규칙 명시
-- [ ] `docs/canonical-document-schema.md` 작성 (AC: 1, 3)
-  - [ ] canonical document/chunk 개념 설명
-  - [ ] 필수/선택 metadata 필드 정의
-  - [ ] data mode: `sample`, `official`, `user_provided`, `unknown` 정의
-  - [ ] lineage/citation 보존 규칙 명시
-- [ ] 테스트 추가 (AC: 1, 2, 3)
-  - [ ] 두 문서 존재 검증
-  - [ ] 필수 status/data mode 용어 검증
-  - [ ] unsupported/deferred silent ingestion 금지 문구 검증
+- [x] `docs/source-inventory.md` 작성 (AC: 1, 2)
+  - [x] 목적, 범위, source status 정의
+  - [x] supported/unsupported/deferred/ingested/failed 상태 설명
+  - [x] source별 예상 필드와 초기 inventory table 추가
+  - [x] unsupported/deferred가 성공 ingestion처럼 처리되지 않는 규칙 명시
+- [x] `docs/canonical-document-schema.md` 작성 (AC: 1, 3)
+  - [x] canonical document/chunk 개념 설명
+  - [x] 필수/선택 metadata 필드 정의
+  - [x] data mode: `sample`, `official`, `user_provided`, `unknown` 정의
+  - [x] lineage/citation 보존 규칙 명시
+- [x] 테스트 추가 (AC: 1, 2, 3)
+  - [x] 두 문서 존재 검증
+  - [x] 필수 status/data mode 용어 검증
+  - [x] unsupported/deferred silent ingestion 금지 문구 검증
 
 ## Dev Notes
 
@@ -57,6 +57,16 @@ TBD by dev agent
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 22 passed
+
 ### Completion Notes List
 
+- Added source inventory draft documenting source statuses and unsupported/deferred handling.
+- Added canonical document schema draft defining document/chunk fields, data modes, lineage, and citation rules.
+- Added tests validating required documentation terms and expected fields.
+
 ### File List
+
+- `docs/source-inventory.md`
+- `docs/canonical-document-schema.md`
+- `backend/tests/test_story_1_5_docs.py`
