@@ -1,16 +1,12 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING
-
 from sqlalchemy import JSON, DateTime, String, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
-
-if TYPE_CHECKING:
-    from app.models.message import Message
+from app.models.message import Message
 
 
 class Conversation(Base):
@@ -27,5 +23,5 @@ class Conversation(Base):
     messages: Mapped[list[Message]] = relationship(
         back_populates="conversation",
         cascade="all, delete-orphan",
-        order_by="Message.created_at",
+        order_by=lambda: (Message.created_at, Message.id),
     )
