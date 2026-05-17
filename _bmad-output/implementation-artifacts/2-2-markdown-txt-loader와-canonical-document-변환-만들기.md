@@ -1,6 +1,6 @@
 # Story 2.2: Markdown/TXT loader와 canonical document 변환 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that 이후 chunking, embedding, retrieval이 동일한 입력 형식을 사�
 
 ## Tasks / Subtasks
 
-- [ ] CanonicalDocument schema/dataclass 추가
-- [ ] markdown/txt loader 구현
-- [ ] unsupported file type error 구현
-- [ ] 확장 가능한 loader registry/factory 구조 구현
-- [ ] 테스트 추가
+- [x] CanonicalDocument schema/dataclass 추가
+- [x] markdown/txt loader 구현
+- [x] unsupported file type error 구현
+- [x] 확장 가능한 loader registry/factory 구조 구현
+- [x] 테스트 추가
 
 ## Dev Notes
 
@@ -36,6 +36,16 @@ TBD by dev agent
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 35 passed
+
 ### Completion Notes List
 
+- Added CanonicalDocument dataclass with data mode validation.
+- Added extensible loader registry and markdown/txt loaders.
+- Added explicit UnsupportedFileTypeError for unsupported inputs.
+
 ### File List
+
+- `backend/app/schemas/document.py`
+- `backend/app/ingestion/loaders.py`
+- `backend/tests/test_story_2_2_loaders.py`
