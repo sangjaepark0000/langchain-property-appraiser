@@ -152,6 +152,12 @@ Run automated RAG API/CLI smoke checks without external keys:
 python scripts/rag_smoke.py --database-url sqlite+pysqlite:///./rag-smoke.db
 ```
 
+Run a 3-turn local CRAG smoke test without LangSmith or external keys:
+
+```bash
+python scripts/multiturn_smoke.py --database-url sqlite+pysqlite:///./multiturn-smoke.db
+```
+
 Unsupported files are reported in `unsupported_files` and are not counted as successful ingestion. The CLI also prints one source-level summary line per file with `status`, `documents`, `chunks`, and failure reason when present.
 
 ## Smoke Check
