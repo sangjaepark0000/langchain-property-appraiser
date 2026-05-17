@@ -32,7 +32,7 @@ def test_official_law_question_discloses_no_official_data_without_fabrication():
 
     assert "official data is not available" in result.answer.lower()
     assert "article 1" not in result.answer.lower()
-    assert "effective date" not in result.answer.lower()
+    assert "202" not in result.answer.lower()
     assert "law.go.kr" not in result.answer.lower()
 
 

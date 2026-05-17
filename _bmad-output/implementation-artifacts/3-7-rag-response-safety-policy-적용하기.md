@@ -1,6 +1,6 @@
 # Story 3.7: RAG response safety policy 적용하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that sample/local data 기반 답변과 공식 검토 결과를 혼동하지 
 
 ## Tasks / Subtasks
 
-- [ ] safety policy helper 추가
-- [ ] answer composer에 policy 적용
-- [ ] official/legal/appraisal 질문 감지
-- [ ] citation fabrication 방지 테스트
-- [ ] API 응답에도 policy 반영 확인
+- [x] safety policy helper 추가
+- [x] answer composer에 policy 적용
+- [x] official/legal/appraisal 질문 감지
+- [x] citation fabrication 방지 테스트
+- [x] API 응답에도 policy 반영 확인
 
 ## Dev Notes
 
@@ -34,6 +34,16 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 82 passed
+
 ### Completion Notes List
 
+- Added deterministic RAG response safety policy.
+- Official/legal/appraisal determination questions receive non-fabrication and limited-assistance notices.
+- Citations remain based only on retrieved metadata.
+
 ### File List
+
+- `backend/app/rag/safety.py`
+- `backend/app/rag/answer.py`
+- `backend/tests/test_story_3_7_rag_safety_policy.py`
