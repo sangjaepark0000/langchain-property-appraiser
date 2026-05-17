@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from sqlalchemy.orm import Session
 
 from app.models.chunk import Chunk
+from app.models.document import Document  # noqa: F401 - ensure relationship registration
 from app.rag.embeddings import EmbeddingProvider, get_embedding_provider
 
 
