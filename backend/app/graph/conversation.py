@@ -11,6 +11,7 @@ from app.models.message import Message
 from app.rag.answer import AnswerResult
 from app.rag.grading import RetrievalGrade
 from app.rag.query import answer_question
+from app.rag.rewrite import QueryRewriteResult
 from app.services.conversation_service import append_message, get_message_history
 
 logger = logging.getLogger(__name__)
@@ -22,9 +23,12 @@ class ConversationGraphState(TypedDict, total=False):
     message_id: int | None
     query_vector: list[float] | None
     min_retrieval_score: float
+    max_rewrite_attempts: int
+    rewrite_query_vector: list[float] | None
     history: list[Message]
     answer: AnswerResult
     grading: RetrievalGrade
+    rewrite: QueryRewriteResult
 
 
 @dataclass(frozen=True)
@@ -32,6 +36,7 @@ class ConversationGraphResult:
     conversation_id: int
     answer: AnswerResult
     grading: RetrievalGrade
+    rewrite: QueryRewriteResult
     history: list[Message] = field(default_factory=list)
 
 
@@ -68,12 +73,16 @@ def build_conversation_graph(session: Session):
             session,
             state["question"],
             query_vector=state.get("query_vector"),
+            rewrite_query_vector=state.get("rewrite_query_vector"),
+            history_texts=[message.content for message in state.get("history", [])],
             min_retrieval_score=state.get("min_retrieval_score", 0.0),
+            max_rewrite_attempts=state.get("max_rewrite_attempts", 1),
             conversation_id=state.get("conversation_id"),
             message_id=state.get("message_id"),
         )
         state["answer"] = rag_result.answer
         state["grading"] = rag_result.grading
+        state["rewrite"] = rag_result.rewrite
         return state
 
     def persist_assistant(state: ConversationGraphState) -> ConversationGraphState:
@@ -90,6 +99,8 @@ def build_conversation_graph(session: Session):
                 "provider": state["answer"].provider,
                 "citations": state["answer"].citations,
                 "retrieval_grading": state["grading"].status,
+                "rewrite_status": state["rewrite"].status,
+                "rewrite_fallback": state["rewrite"].fallback,
             },
         )
         return state
@@ -114,6 +125,8 @@ def run_conversation_graph(
     conversation_id: int | None = None,
     query_vector: list[float] | None = None,
     min_retrieval_score: float = 0.0,
+    rewrite_query_vector: list[float] | None = None,
+    max_rewrite_attempts: int = 1,
 ) -> ConversationGraphResult:
     graph = build_conversation_graph(session)
     final_state = graph.invoke(
@@ -122,11 +135,14 @@ def run_conversation_graph(
             "conversation_id": conversation_id,
             "query_vector": query_vector,
             "min_retrieval_score": min_retrieval_score,
+            "rewrite_query_vector": rewrite_query_vector,
+            "max_rewrite_attempts": max_rewrite_attempts,
         }
     )
     return ConversationGraphResult(
         conversation_id=final_state["conversation_id"],
         answer=final_state["answer"],
         grading=final_state["grading"],
+        rewrite=final_state["rewrite"],
         history=final_state.get("history", []),
     )
