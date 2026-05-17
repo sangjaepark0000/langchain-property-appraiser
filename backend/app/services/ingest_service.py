@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
+from typing import Literal
 
 from sqlalchemy.orm import Session
 
@@ -11,6 +12,20 @@ from app.models.chunk import Chunk
 from app.models.document import Document
 from app.rag.embeddings import EmbeddingResult, embed_texts
 from app.schemas.document import CanonicalDocument
+
+SourceStatus = Literal["supported", "unsupported", "deferred", "ingested", "failed"]
+
+
+@dataclass
+class SourceInventoryEntry:
+    source_path: str
+    status: SourceStatus
+    document_count: int = 0
+    chunk_count: int = 0
+    failure_reason: str | None = None
+
+    def to_dict(self) -> dict:
+        return asdict(self)
 
 
 @dataclass
@@ -26,6 +41,7 @@ class IngestionResult:
     items: list[IngestedItem] = field(default_factory=list)
     unsupported_files: list[str] = field(default_factory=list)
     failed_files: list[str] = field(default_factory=list)
+    source_summaries: dict[str, SourceInventoryEntry] = field(default_factory=dict)
 
     @property
     def documents_processed(self) -> int:
@@ -44,6 +60,15 @@ class IngestionResult:
         if self.failed_files or self.unsupported_files:
             return "partial_success" if self.items else "failed"
         return "success"
+
+    def to_summary_dict(self) -> dict:
+        return {
+            "status": self.status,
+            "documents_processed": self.documents_processed,
+            "chunks_processed": self.chunks_processed,
+            "embeddings_generated": self.embeddings_generated,
+            "sources": {source: summary.to_dict() for source, summary in self.source_summaries.items()},
+        }
 
 
 def persist_ingested_item(item: IngestedItem, session: Session) -> int:
@@ -86,6 +111,7 @@ def ingest_paths(
     result = IngestionResult()
     for path in paths:
         source = Path(path)
+        source_key = str(source)
         try:
             document = load_document(source, data_mode=data_mode)
             chunks = chunk_document(document)
@@ -96,10 +122,27 @@ def ingest_paths(
                     raise RuntimeError("session is required when persist=True")
                 persist_ingested_item(item, session)
             result.items.append(item)
-        except UnsupportedFileTypeError:
-            result.unsupported_files.append(str(source))
+            result.source_summaries[source_key] = SourceInventoryEntry(
+                source_path=source_key,
+                status="ingested",
+                document_count=1,
+                chunk_count=len(chunks),
+            )
+        except UnsupportedFileTypeError as exc:
+            result.unsupported_files.append(source_key)
+            result.source_summaries[source_key] = SourceInventoryEntry(
+                source_path=source_key,
+                status="unsupported",
+                failure_reason=str(exc),
+            )
         except Exception as exc:
-            result.failed_files.append(f"{source}: {exc}")
+            failure = f"{source}: {exc}"
+            result.failed_files.append(failure)
+            result.source_summaries[source_key] = SourceInventoryEntry(
+                source_path=source_key,
+                status="failed",
+                failure_reason=str(exc),
+            )
     if persist and session is not None:
         session.commit()
     return result
