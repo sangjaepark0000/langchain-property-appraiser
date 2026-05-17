@@ -78,7 +78,7 @@ development_status:
   4-3-langgraph-conversation-state-기본-흐름-만들기: done
   4-4-retrieval-grading-만들기: done
   4-5-query-rewrite와-re-retrieval-만들기: done
-  4-6-insufficient-evidence-응답-경로-만들기: backlog
+  4-6-insufficient-evidence-응답-경로-만들기: atdd-done
   4-7-multi-turn-chat-api-contract-확장하기: backlog
   4-8-3턴-대화-smoke-test-만들기: backlog
   epic-4-retrospective: optional
