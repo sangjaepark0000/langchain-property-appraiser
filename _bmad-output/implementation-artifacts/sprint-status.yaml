@@ -90,7 +90,7 @@ development_status:
   5-4-citation과-source-panel-표시하기: done
   5-5-data-mode와-safety-상태-표시하기: done
   5-6-loading-error-insufficient-evidence-상태-표시하기: done
-  5-7-3턴-웹-채팅-smoke-test-만들기: backlog
+  5-7-3턴-웹-채팅-smoke-test-만들기: atdd-done
   epic-5-retrospective: optional
 
   epic-6: backlog
