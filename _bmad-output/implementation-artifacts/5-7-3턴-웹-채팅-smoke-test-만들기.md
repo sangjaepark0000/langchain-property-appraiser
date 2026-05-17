@@ -1,6 +1,6 @@
 # Story 5.7: 3턴 웹 채팅 smoke test 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that backend CRAG conversation runtime이 frontend와 연결되어 동작하�
 
 ## Tasks / Subtasks
 
-- [ ] web chat smoke script 추가
-- [ ] backend 3-turn flow와 frontend contract files 함께 검증
-- [ ] citations/data mode/insufficient UI contract 검증
-- [ ] README 문서화
-- [ ] tests 추가
+- [x] web chat smoke script 추가
+- [x] backend 3-turn flow와 frontend contract files 함께 검증
+- [x] citations/data mode/insufficient UI contract 검증
+- [x] README 문서화
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -34,6 +34,16 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 141 passed
+
 ### Completion Notes List
 
+- Added `scripts/web_chat_smoke.py` combining backend 3-turn `/chat` flow with frontend contract validation.
+- Smoke verifies same conversation_id, user/assistant message persistence, citations/data mode/insufficient UI contracts, and no fabricated official answer.
+- Documented smoke command in frontend README without adding browser automation dependency.
+
 ### File List
+
+- `backend/scripts/web_chat_smoke.py`
+- `backend/tests/test_story_5_7_web_chat_smoke.py`
+- `frontend/README.md`
