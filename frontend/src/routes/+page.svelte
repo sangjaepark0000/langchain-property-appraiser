@@ -26,7 +26,9 @@
         ? `Insufficient evidence: ${response.insufficient_evidence_reason ?? 'reason unavailable'}`
         : `Answered from ${response.data_mode} data`;
     } catch (error) {
-      status = error instanceof Error ? error.message : 'Unexpected chat error';
+      const errorMessage = error instanceof Error ? `Chat error: ${error.message}` : 'Chat error: unexpected failure';
+      status = errorMessage;
+      messages = [...messages, { role: 'assistant', content: errorMessage }];
     } finally {
       isSubmitting = false;
     }

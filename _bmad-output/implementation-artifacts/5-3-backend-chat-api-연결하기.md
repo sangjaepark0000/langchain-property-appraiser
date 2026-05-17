@@ -1,6 +1,6 @@
 # Story 5.3: Backend chat API 연결하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,10 +16,10 @@ so that 검증된 RAG Core를 브라우저에서 사용할 수 있다.
 
 ## Tasks / Subtasks
 
-- [ ] API client contract 강화
-- [ ] page submit flow와 conversation id 유지 확인
-- [ ] error 상태와 assistant 오류 메시지 처리
-- [ ] tests 추가
+- [x] API client contract 강화
+- [x] page submit flow와 conversation id 유지 확인
+- [x] error 상태와 assistant 오류 메시지 처리
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -33,6 +33,16 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 130 passed
+
 ### Completion Notes List
 
+- Hardened frontend `/chat` API client error detail handling.
+- Page sends question plus current conversation_id and stores returned conversation_id for follow-ups.
+- API failures now render explicit assistant error messages and preserve the message list.
+
 ### File List
+
+- `frontend/src/lib/api/chat.ts`
+- `frontend/src/routes/+page.svelte`
+- `backend/tests/test_story_5_3_frontend_backend_chat_api.py`
