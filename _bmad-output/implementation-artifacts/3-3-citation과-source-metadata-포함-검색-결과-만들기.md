@@ -1,6 +1,6 @@
 # Story 3.3: Citation과 source metadata 포함 검색 결과 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,10 +16,10 @@ so that 답변이 어떤 문서와 chunk에 근거하는지 추적할 수 있다
 
 ## Tasks / Subtasks
 
-- [ ] Citation/source metadata result schema 추가
-- [ ] retriever 결과 hydration/serialization 구현
-- [ ] metadata fallback 처리
-- [ ] sample data mode 명시 테스트
+- [x] Citation/source metadata result schema 추가
+- [x] retriever 결과 hydration/serialization 구현
+- [x] metadata fallback 처리
+- [x] sample data mode 명시 테스트
 
 ## Dev Notes
 
@@ -33,6 +33,15 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 67 passed
+
 ### Completion Notes List
 
+- Added RAG-layer citation hydration for retrieval results.
+- Included source path/name/url, data mode, chunk index, document id, chunk id.
+- Added unknown fallbacks and explicit `is_official` flag without fabricating official URLs.
+
 ### File List
+
+- `backend/app/rag/citations.py`
+- `backend/tests/test_story_3_3_retrieval_citations.py`
