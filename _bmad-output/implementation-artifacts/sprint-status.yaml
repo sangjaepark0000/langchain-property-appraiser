@@ -60,7 +60,7 @@ development_status:
   2-7-공식-공개-데이터-source-조사와-수집-방식-기록하기: done
   epic-2-retrospective: done
 
-  epic-3: done
+  epic-3: in-progress
   3-1-rag-smoke-test용-sample-knowledge-fixture-만들기: done
   3-2-vector-retrieval-기본-검색-만들기: done
   3-3-citation과-source-metadata-포함-검색-결과-만들기: done
@@ -69,6 +69,7 @@ development_status:
   3-6-post-chat-또는-query-기본-rag-api-만들기: done
   3-7-rag-response-safety-policy-적용하기: done
   3-8-rag-api-cli-smoke-test-자동화하기: done
+  3-9-pgvector-backed-chunk-embedding-저장과-검색-만들기: atdd-done
   epic-3-retrospective: done
 
   epic-4: backlog
