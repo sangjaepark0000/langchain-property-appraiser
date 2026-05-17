@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Protocol
 
+from app.rag.safety import apply_response_safety_policy
+
 
 @dataclass(frozen=True)
 class AnswerProviderResult:
@@ -66,8 +68,9 @@ def compose_answer(
     if not evidence:
         fallback_provider = ExtractiveFallbackAnswerProvider()
         provider_result = fallback_provider.generate(question, evidence)
+        safe_answer = apply_response_safety_policy(question, provider_result.answer, evidence)
         return AnswerResult(
-            answer=provider_result.answer,
+            answer=safe_answer,
             status="insufficient_evidence",
             provider=provider_result.provider,
             fallback=provider_result.fallback,
@@ -81,6 +84,7 @@ def compose_answer(
     answer = provider_result.answer
     if data_mode == "sample" and "sample/local data" not in answer:
         answer = f"Based on sample/local data, {answer}"
+    answer = apply_response_safety_policy(question, answer, evidence)
     return AnswerResult(
         answer=answer,
         status="answered",
