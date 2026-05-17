@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from pathlib import Path
 
+from app.ingestion.official_law import load_official_law_xml
 from app.schemas.document import CanonicalDocument
 
 
@@ -77,6 +78,7 @@ def register_default_loaders(registry: LoaderRegistry) -> None:
     registry.register(".md", load_markdown)
     registry.register(".markdown", load_markdown)
     registry.register(".txt", load_txt)
+    registry.register(".xml", load_official_law_xml)
 
 
 def default_loader_registry() -> LoaderRegistry:

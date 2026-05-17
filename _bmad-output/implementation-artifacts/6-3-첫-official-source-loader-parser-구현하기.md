@@ -1,6 +1,6 @@
 # Story 6.3: 첫 official source loader/parser 구현하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -17,11 +17,11 @@ so that 실제 공식/공개 데이터를 canonical document schema로 변환할
 
 ## Tasks / Subtasks
 
-- [ ] official law XML parser 추가
-- [ ] loader registry XML 등록
-- [ ] invalid XML/shape failure 처리
-- [ ] missing metadata unknown/null 처리
-- [ ] fixtures/tests 추가
+- [x] official law XML parser 추가
+- [x] loader registry XML 등록
+- [x] invalid XML/shape failure 처리
+- [x] missing metadata unknown/null 처리
+- [x] fixtures/tests 추가
 
 ## Dev Notes
 
@@ -35,6 +35,21 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 153 passed
+
 ### Completion Notes List
 
+- Added official law XML loader/parser for recorded/local XML fixtures.
+- Registered `.xml` loader and maps official-law-open-api style XML to CanonicalDocument with `domain_metadata`.
+- Invalid XML shape raises explicit parse error rather than partial official ingestion.
+- Missing metadata remains `unknown`/null; source URL/dates/articles are not fabricated.
+- Live API credentials remain prerequisite work, not required for tests.
+
 ### File List
+
+- `backend/app/ingestion/official_law.py`
+- `backend/app/ingestion/loaders.py`
+- `backend/tests/test_story_6_3_official_law_loader.py`
+- `backend/tests/fixtures/official_law/sample_law.xml`
+- `backend/tests/fixtures/official_law/missing_metadata.xml`
+- `backend/tests/fixtures/official_law/invalid_shape.xml`
