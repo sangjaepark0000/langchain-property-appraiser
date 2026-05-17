@@ -31,6 +31,21 @@ def test_required_backend_project_files_and_directories_exist():
     assert missing == []
 
 
+def test_pyproject_declares_required_runtime_and_dependencies():
+    pyproject = (BACKEND_ROOT / "pyproject.toml").read_text()
+
+    assert 'requires-python = ">=3.12"' in pyproject
+    for dependency in ["fastapi==0.136.1", "uvicorn[standard]==0.47.0", "langchain==1.3.1", "langgraph==1.2.0"]:
+        assert dependency in pyproject
+
+
+def test_backend_readme_documents_setup_and_no_credential_startup():
+    readme = (BACKEND_ROOT / "README.md").read_text()
+
+    for expected_text in ["Python 3.12", "Python 3.13", "uvicorn app.main:app", "pytest", "Credentials Are Not Required"]:
+        assert expected_text in readme
+
+
 def test_fastapi_app_imports_without_external_credentials(monkeypatch):
     for key in [
         "DATABASE_URL",
