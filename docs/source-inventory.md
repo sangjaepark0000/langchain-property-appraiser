@@ -52,12 +52,43 @@
 - PDF, DOCX, HWP, OCR 필요 source는 별도 parser/추출 품질 평가 전까지 `deferred` 또는 `unsupported`로 둔다.
 - official source는 조사 완료 상태여도 ingestion 완료로 표시하지 않는다. `data_mode` = `official` source는 실제 API/scraping 구현과 검증이 끝난 뒤에만 `ingested`로 변경한다.
 
+## Official Source Prioritization Rubric
+
+공식 source 우선순위는 “가장 중요한 source”가 아니라 “공식성, 접근 안정성, 구조화 가능성, metadata 품질을 함께 만족해 첫 ingestion을 안전하게 검증할 수 있는 source”를 먼저 고르는 방식으로 판단한다.
+
+| Criterion | Weight | Meaning |
+|---|---:|---|
+| official authority | 30 | 정부/공공/법정 기관 source인지, 발행 주체가 명확한지 |
+| access stability | 20 | 공개 API/페이지/다운로드가 안정적인지, 인증/캡차/수동 절차가 낮은지 |
+| machine readability | 20 | XML/JSON/구조적 HTML처럼 parser 구현이 가능한 형식인지 |
+| metadata completeness | 15 | source_title, source_url, source_authority, revision/effective date, article metadata를 얻을 수 있는지 |
+| domain fit | 10 | 법령·고시/감정평가 질문의 근거로 직접 쓸 수 있는지 |
+| implementation complexity | 5 | 첫 loader로 작게 구현하고 실패 처리를 명확히 할 수 있는지 |
+
+결정 규칙:
+
+1. `first_loader_target=true`는 실제 ingestion 완료가 아니라 다음 구현 대상으로 선정되었다는 뜻이다.
+2. `status=deferred` source는 loader와 smoke 검증 전까지 official knowledge base에 포함하지 않는다.
+3. API key, parser, attachment 전략, 이용조건 확인이 필요한 source는 deferred 상태를 유지한다.
+4. 수동 보완은 official source에서 사람이 확인 가능한 metadata를 채우는 용도이며, 법률 결론/감정평가 적정성 판단을 보완하지 않는다.
+
+## Official Source Priority Decisions
+
+| source_id | priority_score | priority | support status | access method | expected_loader_type | first_loader_target | manual_supplementation | agent_limitation | prerequisite_work | unsupported/deferred rationale |
+|---|---:|---|---|---|---|---|---|---|---|---|
+| `official-law-open-api` | 86 | high | deferred | open_api | `xml_api_loader` | first_loader_target=true | 법령명, 조항, 시행일/개정일 label 검수 가능 | API key/app id와 live API availability 없이는 agent가 실제 응답 보장 불가 | API credential 설정, XML fixture 확보, rate/error handling | 공식성과 machine readability가 가장 좋아 첫 official ingestion 후보지만 아직 loader/API credential이 없어 deferred; do not display as official knowledge base |
+| `official-molit-appraisal-standards` | 72 | high | deferred | web_page | `html_notice_parser` + `pdf_or_hwp_attachment_strategy` | first_loader_target=false | 고시명, 고시번호, 시행일, 첨부 원문 URL 수동 검수 가능 | HTML/PDF/HWP 혼합 가능성이 있어 agent 단독 parsing 품질 보장 어려움 | 본문/첨부 구조 확인, PDF/HWP 전략, source fixture 저장 | 도메인 적합성은 높지만 attachment format 불확실성이 커서 첫 loader보다 두 번째 후보; do not display as official knowledge base |
+| `official-public-land-price-api` | 66 | medium | deferred | open_api | `json_xml_api_loader` + `structured_price_schema` | first_loader_target=false | API 항목명, 지역/기간 parameter, 기준일 metadata 수동 검수 가능 | 구조화 가격 데이터라 텍스트 법령 RAG와 다른 schema가 필요 | API key, structured schema, recent-period filter design | 공시지가 데이터 후보이나 법령/고시 text ingestion과 다르므로 별도 structured pipeline 전까지 deferred; do not display as official knowledge base |
+| `official-molit-open-api-guide` | 48 | low | deferred | open_api_catalog | `api_catalog_research` | first_loader_target=false | 실제 도메인 API 후보 식별에 수동 보완 가능 | 가이드 자체는 도메인 지식 원문이 아님 | 필요한 도메인 API 목록 추출 | API 사용 방식 참고용 source이며 answer knowledge base가 아님; do not display as official knowledge base |
+| `official-law-notices` | 30 | low | deferred | api_or_web | `source_discovery` | first_loader_target=false | 신규 source 후보 등록에 수동 보완 가능 | umbrella row라 실제 loader 대상이 아님 | 구체 source_id로 분리 | 구체 source가 위 row로 분리되어 있어 umbrella 자체는 ingestion 대상 아님; do not display as official knowledge base |
+| `hwp-documents` | 12 | low | unsupported | local_file | `pdf_docx_hwp_ocr_pipeline` | first_loader_target=false | 사람이 텍스트 추출본을 제공하면 user_provided 또는 curated official fixture로 보완 가능 | HWP parser/OCR 품질과 라이선스/환경 문제가 agent 단독 처리에 부적합 | HWP parser 선택, OCR 품질 평가, 이용조건 검토 | HWP parser 부재로 unsupported; silent ingestion 금지 |
+
 ## 다음 loader/parser 작업 후보
 
 | priority | next_loader_work | needed for | notes |
 |---|---|---|---|
-| high | `xml_api_loader` | 국가법령정보 OPEN API | API key/app id 설정, XML metadata mapping, rate/error handling 필요 |
-| medium | `html_notice_parser` | 국토교통부 고시 페이지 | 본문/첨부 구분, 고시번호/시행일 metadata 추출 필요 |
+| high | `xml_api_loader` | 국가법령정보 OPEN API | `official-law-open-api`가 첫 official ingestion 후보. API key/app id 설정, XML metadata mapping, rate/error handling 필요 |
+| high | `html_notice_parser` | 국토교통부 고시 페이지 | 도메인 적합성 높음. 본문/첨부 구분, 고시번호/시행일 metadata 추출 필요 |
 | medium | `json_xml_api_loader` | 공공데이터포털 공시지가 API | 구조화 schema와 텍스트 RAG chunking 분리 필요 |
 | low | `pdf_docx_hwp_ocr_pipeline` | 첨부 문서 | parser 품질, 저작권/이용조건, OCR 비용 검토 필요 |
 

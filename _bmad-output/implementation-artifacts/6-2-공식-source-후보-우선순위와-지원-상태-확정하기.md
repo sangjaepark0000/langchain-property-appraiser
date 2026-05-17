@@ -1,6 +1,6 @@
 # Story 6.2: 공식 source 후보 우선순위와 지원 상태 확정하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -19,11 +19,11 @@ so that 어떤 source부터 ingestion 구현할지 결정할 수 있다.
 
 ## Tasks / Subtasks
 
-- [ ] priority scoring rubric 추가
-- [ ] official source 후보별 priority/support status 확정
-- [ ] first loader target 선정
-- [ ] manual supplementation/agent limitation/prerequisite 기록
-- [ ] tests 추가
+- [x] priority scoring rubric 추가
+- [x] official source 후보별 priority/support status 확정
+- [x] first loader target 선정
+- [x] manual supplementation/agent limitation/prerequisite 기록
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -37,6 +37,16 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 149 passed
+
 ### Completion Notes List
 
+- Added official source prioritization rubric to source inventory.
+- Ranked official source candidates and selected `official-law-open-api` as first_loader_target while keeping it deferred until loader/API validation.
+- Recorded expected loader type, manual supplementation path, agent limitation, prerequisite work, and unsupported/deferred rationale for each candidate.
+- Preserved rule that deferred official sources must not display as official knowledge base.
+
 ### File List
+
+- `docs/source-inventory.md`
+- `backend/tests/test_story_6_2_source_priority.py`
