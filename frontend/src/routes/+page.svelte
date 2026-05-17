@@ -3,9 +3,11 @@
   import ChatInput from '$lib/components/ChatInput.svelte';
   import type { Citation } from '$lib/components/CitationPanel.svelte';
   import MessageList, { type ChatMessage } from '$lib/components/MessageList.svelte';
+  import StatusPanel, { type ChatStatus } from '$lib/components/StatusPanel.svelte';
 
   type CitationForMessage = Citation;
 
+  let statusKind: ChatStatus = 'ready';
   let status = 'Ready';
   let isSubmitting = false;
   let conversationId: number | undefined;
@@ -18,6 +20,7 @@
 
   async function submitQuestion(question: string) {
     messages = [...messages, { role: 'user', content: question }];
+    statusKind = 'loading';
     status = 'Waiting for backend /chat response...';
     isSubmitting = true;
 
@@ -35,11 +38,13 @@
           insufficientEvidenceReason: response.insufficient_evidence_reason
         }
       ];
+      statusKind = response.insufficient_evidence ? 'insufficient_evidence' : 'ready';
       status = response.insufficient_evidence
         ? `Insufficient evidence: ${response.insufficient_evidence_reason ?? 'reason unavailable'}`
         : `Answered from ${response.data_mode} data`;
     } catch (error) {
       const errorMessage = error instanceof Error ? `Chat error: ${error.message}` : 'Chat error: unexpected failure';
+      statusKind = 'error';
       status = errorMessage;
       messages = [...messages, { role: 'assistant', content: errorMessage }];
     } finally {
@@ -67,11 +72,9 @@
       <ChatInput onSubmit={submitQuestion} disabled={isSubmitting} />
     </div>
 
-    <aside class="status" data-testid="status-panel" aria-label="Status panel">
-      <strong>Status</strong>
-      <p>{status}</p>
-      <small>Conversation: {conversationId ?? 'new'}</small>
-    </aside>
+    <div data-testid="status-panel">
+      <StatusPanel {statusKind} statusMessage={status} {conversationId} />
+    </div>
   </section>
 </main>
 
@@ -114,15 +117,6 @@
     display: grid;
     grid-template-rows: minmax(20rem, 1fr) auto auto;
     overflow: hidden;
-  }
-
-  .status {
-    border-top: 1px solid #dfe5ef;
-    padding: 1rem 1.5rem;
-  }
-
-  .status p {
-    margin: 0.35rem 0;
   }
 
   @media (max-width: 820px) {
