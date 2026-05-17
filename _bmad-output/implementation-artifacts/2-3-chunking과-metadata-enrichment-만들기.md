@@ -1,6 +1,6 @@
 # Story 2.3: Chunking과 metadata enrichment 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that retrieval 결과가 원본 문서와 위치 정보를 추적할 수 있�
 
 ## Tasks / Subtasks
 
-- [ ] CanonicalChunk schema 추가
-- [ ] character 기반 configurable chunker 구현
-- [ ] metadata enrichment/lineage 보존
-- [ ] empty/short document 처리
-- [ ] 테스트 추가
+- [x] CanonicalChunk schema 추가
+- [x] character 기반 configurable chunker 구현
+- [x] metadata enrichment/lineage 보존
+- [x] empty/short document 처리
+- [x] 테스트 추가
 
 ## Dev Notes
 
@@ -36,6 +36,16 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 39 passed
+
 ### Completion Notes List
 
+- Added CanonicalChunk schema.
+- Added configurable character chunker with overlap.
+- Preserved metadata, lineage, citation fields and explicit empty document error.
+
 ### File List
+
+- `backend/app/schemas/chunk.py`
+- `backend/app/ingestion/chunker.py`
+- `backend/tests/test_story_2_3_chunking.py`
