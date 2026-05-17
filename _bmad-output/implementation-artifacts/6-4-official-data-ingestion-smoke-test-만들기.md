@@ -1,6 +1,6 @@
 # Story 6.4: Official data ingestion smoke test 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -17,11 +17,11 @@ so that 공식/공개 데이터가 sample data와 구분되어 저장되는지 �
 
 ## Tasks / Subtasks
 
-- [ ] official ingestion smoke script 추가
-- [ ] successful official fixture ingestion 검증
-- [ ] invalid official fixture failure 검증
-- [ ] sample/official mixed data_mode 구분 검증
-- [ ] tests 추가
+- [x] official ingestion smoke script 추가
+- [x] successful official fixture ingestion 검증
+- [x] invalid official fixture failure 검증
+- [x] sample/official mixed data_mode 구분 검증
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -35,6 +35,16 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 155 passed
+
 ### Completion Notes List
 
+- Added local official ingestion smoke script using recorded XML fixture.
+- Smoke verifies persisted official document/chunk data_mode, domain_metadata, and source_lineage.
+- Smoke verifies invalid official XML fails and is not persisted as official knowledge base.
+- Smoke verifies sample and official documents can coexist and remain distinguishable.
+
 ### File List
+
+- `backend/scripts/official_ingestion_smoke.py`
+- `backend/tests/test_story_6_4_official_ingestion_smoke.py`
