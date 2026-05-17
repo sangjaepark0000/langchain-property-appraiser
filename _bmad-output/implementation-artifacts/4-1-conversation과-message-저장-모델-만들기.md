@@ -1,6 +1,6 @@
 # Story 4.1: Conversation과 Message 저장 모델 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,12 +16,12 @@ so that 멀티턴 대화의 이전 질문과 답변 맥락을 추적할 수 있�
 
 ## Tasks / Subtasks
 
-- [ ] Conversation/Message SQLAlchemy 모델 추가
-- [ ] Alembic migration 추가
-- [ ] conversation service 추가
-- [ ] 새 conversation 생성/메시지 추가 구현
-- [ ] history 조회 구현
-- [ ] 테스트 추가
+- [x] Conversation/Message SQLAlchemy 모델 추가
+- [x] Alembic migration 추가
+- [x] conversation service 추가
+- [x] 새 conversation 생성/메시지 추가 구현
+- [x] history 조회 구현
+- [x] 테스트 추가
 
 ## Dev Notes
 
@@ -36,6 +36,20 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 93 passed
+- Docker PostgreSQL Alembic upgrade head → `conversations`, `messages`, version `20260517_0004` verified
+
 ### Completion Notes List
 
+- Added Conversation and Message SQLAlchemy models with cascade relationship.
+- Added Alembic migration for `conversations` and `messages`.
+- Added conversation service for creating/appending messages and reading history.
+
 ### File List
+
+- `backend/app/models/conversation.py`
+- `backend/app/models/message.py`
+- `backend/alembic/versions/20260517_0004_conversations_messages.py`
+- `backend/alembic/env.py`
+- `backend/app/services/conversation_service.py`
+- `backend/tests/test_story_4_1_conversations.py`
