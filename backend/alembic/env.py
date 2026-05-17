@@ -11,6 +11,7 @@ import app.models.chunk  # noqa: F401
 import app.models.conversation  # noqa: F401
 import app.models.document  # noqa: F401
 import app.models.message  # noqa: F401
+import app.models.retrieval_trace  # noqa: F401
 
 config = context.config
 
