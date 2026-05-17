@@ -1,12 +1,12 @@
 # Story Dependency Graph
-_Last updated: 2026-05-17T01:04:53.426999+00:00_
+_Last updated: 2026-05-17T01:39:42.406115+00:00_
 
 ## Stories
 
 | Story | Epic | Title | Sprint Status | Issue | PR | PR Status | Dependencies | Ready to Work |
 |-------|------|-------|--------------|-------|----|-----------|--------------|---------------|
-| 1.1 | 1 | 백엔드 프로젝트 기본 골격 만들기 | backlog | #1 | — | — | none | ✅ Yes |
-| 1.2 | 1 | 환경변수와 secret 관리 만들기 | backlog | #2 | — | — | 1.1 | ❌ No (1.1 not merged) |
+| 1.1 | 1 | 백엔드 프로젝트 기본 골격 만들기 | done | #1 | #44 | merged | none | ✅ Yes (done) |
+| 1.2 | 1 | 환경변수와 secret 관리 만들기 | backlog | #2 | — | — | 1.1 | ✅ Yes |
 | 1.3 | 1 | PostgreSQL + pgvector 로컬 DB 준비하기 | backlog | #3 | — | — | 1.2 | ❌ No (1.2 not merged) |
 | 1.4 | 1 | SQLAlchemy와 Alembic migration 기반 만들기 | backlog | #4 | — | — | 1.3 | ❌ No (1.3 not merged) |
 | 1.5 | 1 | Source inventory와 canonical schema 문서 초안 만들기 | backlog | #5 | — | — | 1.4 | ❌ No (1.4 not merged) |
@@ -91,6 +91,5 @@ _Last updated: 2026-05-17T01:04:53.426999+00:00_
 
 ## Notes
 
-- Initial BAD graph generated in Pi sequential fallback mode.
+- Dependency graph updated after PR reconciliation.
 - Conservative dependency mapping is sequential within each epic; epic ordering blocks later epics until earlier epics are complete and merged.
-- GitHub issues were created/linked for all stories using the `bad` label.
