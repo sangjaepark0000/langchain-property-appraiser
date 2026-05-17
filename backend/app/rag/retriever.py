@@ -3,6 +3,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 
+from sqlalchemy import text as sql_text
 from sqlalchemy.orm import Session
 
 from app.models.chunk import Chunk
@@ -60,9 +61,14 @@ class VectorRetriever:
                 return []
             resolved_query_vector = embedding.vector
 
+        if self.session.bind is not None and self.session.bind.dialect.name == "postgresql":
+            pgvector_results = self._search_pgvector(resolved_query_vector, limit=limit, min_score=min_score)
+            if pgvector_results:
+                return pgvector_results
+
         candidates: list[RetrievalResult] = []
         for chunk in self.session.query(Chunk).all():
-            stored_embedding = chunk.metadata_.get("embedding") if chunk.metadata_ else None
+            stored_embedding = chunk.embedding or (chunk.metadata_.get("embedding") if chunk.metadata_ else None)
             if not isinstance(stored_embedding, list):
                 continue
             try:
@@ -83,3 +89,33 @@ class VectorRetriever:
             )
         candidates.sort(key=lambda result: result.score, reverse=True)
         return candidates[:limit]
+
+    def _search_pgvector(self, query_vector: list[float], *, limit: int, min_score: float) -> list[RetrievalResult]:
+        vector_literal = "[" + ",".join(str(float(value)) for value in query_vector) + "]"
+        rows = self.session.execute(
+            sql_text(
+                """
+                SELECT id, document_id, text, 1 - (embedding <=> CAST(:query_vector AS vector)) AS score
+                FROM chunks
+                WHERE embedding IS NOT NULL
+                ORDER BY embedding <=> CAST(:query_vector AS vector)
+                LIMIT :limit
+                """
+            ),
+            {"query_vector": vector_literal, "limit": limit},
+        ).mappings()
+        results: list[RetrievalResult] = []
+        for row in rows:
+            score = round(float(row["score"]), 6)
+            if score < min_score:
+                continue
+            results.append(
+                RetrievalResult(
+                    chunk_id=int(row["id"]),
+                    document_id=int(row["document_id"]),
+                    text=str(row["text"]),
+                    score=score,
+                    relevance=relevance_label(score),
+                )
+            )
+        return results

@@ -87,7 +87,9 @@ def persist_ingested_item(item: IngestedItem, session: Session) -> int:
     session.flush()
     for chunk, embedding in zip(item.chunks, item.embeddings, strict=True):
         metadata = dict(chunk.metadata)
+        vector = None
         if embedding.status == "success" and embedding.vector:
+            vector = embedding.vector
             metadata["embedding"] = embedding.vector
             metadata["embedding_provider"] = embedding.provider
             metadata["embedding_fallback"] = embedding.fallback
@@ -98,6 +100,7 @@ def persist_ingested_item(item: IngestedItem, session: Session) -> int:
                 text=chunk.text,
                 metadata_=metadata,
                 source_lineage=chunk.lineage,
+                embedding=vector,
                 char_start=chunk.char_start,
                 char_end=chunk.char_end,
             )

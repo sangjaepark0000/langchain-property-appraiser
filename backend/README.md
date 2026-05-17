@@ -113,6 +113,15 @@ cd backend
 python -m alembic -c alembic.ini upgrade head
 ```
 
+## Vector Storage
+
+Chunk embeddings are stored in two places:
+
+- `chunks.embedding`: PostgreSQL/pgvector column, default dimension `16` for local fake embeddings.
+- `chunks.metadata.embedding`: JSON fallback for sqlite/local smoke and debugging.
+
+The retriever prefers pgvector search on PostgreSQL and falls back to Python cosine similarity over stored vectors for sqlite/local smoke runs.
+
 ## Ingestion Smoke
 
 Run a no-DB ingestion smoke command from `backend/`:
