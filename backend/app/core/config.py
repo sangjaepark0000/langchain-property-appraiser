@@ -17,7 +17,10 @@ class Settings(BaseSettings):
     app_env: str = Field(default="local", alias="APP_ENV")
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
 
-    database_url: str | None = Field(default=None, alias="DATABASE_URL")
+    database_url: str | None = Field(
+        default="postgresql+psycopg://app:app@localhost:5432/langchain_property_appraiser",
+        alias="DATABASE_URL",
+    )
 
     llm_provider: str = Field(default="none", alias="LLM_PROVIDER")
     llm_api_key: str | None = Field(default=None, alias="LLM_API_KEY")
