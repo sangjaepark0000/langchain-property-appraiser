@@ -1,6 +1,6 @@
 # Story 3.6: `POST /chat` 또는 `/query` 기본 RAG API 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that 이후 웹 UI와 CRAG runtime이 같은 응답 계약을 사용할 수 �
 
 ## Tasks / Subtasks
 
-- [ ] request/response schema 추가
-- [ ] API route 추가
-- [ ] thin route + RAG service 호출
-- [ ] validation error handler 추가
-- [ ] insufficient evidence API 테스트 추가
+- [x] request/response schema 추가
+- [x] API route 추가
+- [x] thin route + RAG service 호출
+- [x] validation error handler 추가
+- [x] insufficient evidence API 테스트 추가
 
 ## Dev Notes
 
@@ -35,6 +35,18 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 78 passed
+
 ### Completion Notes List
 
+- Added POST /query API endpoint with reusable response shape.
+- Added query request/response schemas and validation error shape.
+- Kept route thin by delegating to RAG query service.
+- Insufficient evidence returns HTTP 200 with explicit flag.
+
 ### File List
+
+- `backend/app/api/routes.py`
+- `backend/app/main.py`
+- `backend/app/schemas/query.py`
+- `backend/tests/test_story_3_6_query_api.py`
