@@ -1,6 +1,6 @@
 # Story 5.1: SvelteKit frontend 초기화와 기본 레이아웃 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that CLI/API 없이 RAG 챗봇을 사용할 수 있다.
 
 ## Tasks / Subtasks
 
-- [ ] SvelteKit frontend skeleton 추가
-- [ ] 기본 chat layout 구현
-- [ ] 단순 API client 구조 추가
-- [ ] dev docs 추가
-- [ ] tests 추가
+- [x] SvelteKit frontend skeleton 추가
+- [x] 기본 chat layout 구현
+- [x] 단순 API client 구조 추가
+- [x] dev docs 추가
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -35,6 +35,23 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 124 passed
+
 ### Completion Notes List
 
+- Added minimal SvelteKit frontend skeleton under `frontend/`.
+- Implemented chat-centered default layout with message list, input, and status regions.
+- Added simple `/chat` API client without global state manager.
+- Documented local backend/frontend development workflow.
+
 ### File List
+
+- `frontend/package.json`
+- `frontend/svelte.config.js`
+- `frontend/vite.config.ts`
+- `frontend/tsconfig.json`
+- `frontend/src/app.html`
+- `frontend/src/routes/+page.svelte`
+- `frontend/src/lib/api/chat.ts`
+- `frontend/README.md`
+- `backend/tests/test_story_5_1_frontend_skeleton.py`
