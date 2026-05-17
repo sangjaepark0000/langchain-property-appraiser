@@ -8,7 +8,9 @@ from sqlalchemy import engine_from_config, pool
 from app.core.config import get_settings
 from app.db.base import Base
 import app.models.chunk  # noqa: F401
+import app.models.conversation  # noqa: F401
 import app.models.document  # noqa: F401
+import app.models.message  # noqa: F401
 
 config = context.config
 
