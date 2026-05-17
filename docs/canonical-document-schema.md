@@ -64,6 +64,15 @@ Canonical document schema는 loader/parser가 서로 다른 입력 형식을 공
 }
 ```
 
+## Domain Metadata Extension
+
+Official 법령·고시 및 감정평가 도메인 source는 `metadata.domain_metadata`에 확장 metadata를 저장한다. 자세한 필드 정의는 `docs/domain-metadata-schema.md`를 따른다.
+
+- 기존 sample/local document는 `domain_metadata`가 없어도 유효하다.
+- Story 6.1 기준으로 `domain_metadata`는 canonical metadata contract이며 별도 DB column 추가를 요구하지 않는다.
+- 법령명/자료명, 조항, 개정일, 시행일, 수집일, 출처 URL, source authority는 source가 제공하거나 사람이 검증한 값만 사용한다.
+- 누락 값은 `unknown` 또는 `null`로 표현하고 official metadata를 임의 생성하지 않는다.
+
 ## Lineage and Citation Rules
 
 1. Every chunk must preserve enough lineage to trace back to the original document/source.
