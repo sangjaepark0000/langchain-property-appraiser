@@ -50,6 +50,48 @@ Expected response:
 {"status":"ok","service":"langchain-property-appraiser-backend"}
 ```
 
+## Local PostgreSQL + pgvector
+
+Start the local database from the repository root:
+
+```bash
+docker compose up -d db
+```
+
+Check status and logs:
+
+```bash
+docker compose ps
+docker compose logs db
+```
+
+Verify backend connectivity and pgvector support:
+
+```bash
+cd backend
+source .venv/bin/activate
+python scripts/check_db.py
+```
+
+Stop the database while keeping local data:
+
+```bash
+docker compose stop db
+```
+
+Reset local database state, including the persistent volume:
+
+```bash
+docker compose down -v
+docker compose up -d db
+```
+
+The local compose defaults match `../.env.example`:
+
+```text
+DATABASE_URL=postgresql+psycopg://app:app@localhost:5432/langchain_property_appraiser
+```
+
 ## Run Tests
 
 ```bash

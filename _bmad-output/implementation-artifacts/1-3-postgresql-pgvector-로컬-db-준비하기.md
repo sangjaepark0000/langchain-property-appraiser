@@ -1,6 +1,6 @@
 # Story 1.3: PostgreSQL + pgvector 로컬 DB 준비하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,25 +16,25 @@ so that RAG metadata와 vector-ready storage를 일관된 local 환경에서 개
 
 ## Tasks / Subtasks
 
-- [ ] Docker Compose 기반 local DB 추가 (AC: 1)
-  - [ ] root `docker-compose.yml` 생성
-  - [ ] PostgreSQL + pgvector 지원 image 사용
-  - [ ] persistent volume과 local port 정의
-  - [ ] pgvector extension 초기화 SQL 추가
-- [ ] `.env.example` 연결 정보 정합성 보장 (AC: 1)
-  - [ ] compose database/user/password/db name과 `DATABASE_URL` 일치
-  - [ ] 민감 real secret 없이 local-only safe defaults 사용
-- [ ] DB connectivity check 추가 (AC: 2)
-  - [ ] backend script 또는 command로 settings의 `DATABASE_URL` 사용
-  - [ ] 연결 성공 시 pgvector extension 사용 가능 여부 확인
-  - [ ] 연결 실패 시 host/port/db 설정 확인을 유도하는 명확한 error message 제공
-- [ ] reset/run 문서 추가 (AC: 1, 3)
-  - [ ] DB 시작/중지/로그/상태 확인 명령 문서화
-  - [ ] volume 포함 reset 절차 문서화
-- [ ] 테스트 추가/업데이트 (AC: 1, 2, 3)
-  - [ ] compose 파일이 pgvector image/volume/port/init SQL을 포함하는지 정적 검증
-  - [ ] `.env.example` DATABASE_URL과 compose 값이 일치하는지 검증
-  - [ ] connectivity script가 missing/invalid DB에서 명확한 에러 메시지를 반환하는지 검증
+- [x] Docker Compose 기반 local DB 추가 (AC: 1)
+  - [x] root `docker-compose.yml` 생성
+  - [x] PostgreSQL + pgvector 지원 image 사용
+  - [x] persistent volume과 local port 정의
+  - [x] pgvector extension 초기화 SQL 추가
+- [x] `.env.example` 연결 정보 정합성 보장 (AC: 1)
+  - [x] compose database/user/password/db name과 `DATABASE_URL` 일치
+  - [x] 민감 real secret 없이 local-only safe defaults 사용
+- [x] DB connectivity check 추가 (AC: 2)
+  - [x] backend script 또는 command로 settings의 `DATABASE_URL` 사용
+  - [x] 연결 성공 시 pgvector extension 사용 가능 여부 확인
+  - [x] 연결 실패 시 host/port/db 설정 확인을 유도하는 명확한 error message 제공
+- [x] reset/run 문서 추가 (AC: 1, 3)
+  - [x] DB 시작/중지/로그/상태 확인 명령 문서화
+  - [x] volume 포함 reset 절차 문서화
+- [x] 테스트 추가/업데이트 (AC: 1, 2, 3)
+  - [x] compose 파일이 pgvector image/volume/port/init SQL을 포함하는지 정적 검증
+  - [x] `.env.example` DATABASE_URL과 compose 값이 일치하는지 검증
+  - [x] connectivity script가 missing/invalid DB에서 명확한 에러 메시지를 반환하는지 검증
 
 ## Dev Notes
 
@@ -74,6 +74,19 @@ TBD by dev agent
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 14 passed
+
 ### Completion Notes List
 
+- Added Docker Compose service for local PostgreSQL with pgvector support.
+- Added pgvector init SQL and backend DB connectivity check script.
+- Documented DB start/stop/reset and connectivity commands.
+
 ### File List
+
+- `docker-compose.yml`
+- `docker/postgres/init/01-create-vector-extension.sql`
+- `backend/README.md`
+- `backend/pyproject.toml`
+- `backend/scripts/check_db.py`
+- `backend/tests/test_story_1_3_local_db.py`
