@@ -8,7 +8,8 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1]
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
-from app.db.session import SessionLocal
+from app.db.base import Base
+from app.db.session import SessionLocal, engine
 from app.services.ingest_service import ingest_paths
 
 
@@ -19,6 +20,8 @@ def main() -> int:
     parser.add_argument("--no-persist", action="store_true", help="Run loader/chunker/embedding without DB writes")
     args = parser.parse_args()
 
+    if not args.no_persist:
+        Base.metadata.create_all(engine)
     session = None if args.no_persist else SessionLocal()
     try:
         result = ingest_paths(args.paths, data_mode=args.data_mode, persist=not args.no_persist, session=session)

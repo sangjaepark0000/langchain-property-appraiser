@@ -1,6 +1,6 @@
 # Story 3.5: 단일 질문 RAG CLI smoke command 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that 웹 UI 없이 ingestion부터 retrieval, answer까지 end-to-end로 검�
 
 ## Tasks / Subtasks
 
-- [ ] ingestion persistence에 embedding metadata 저장 보강
-- [ ] RAG query service 추가
-- [ ] CLI smoke command 추가
-- [ ] no evidence 처리
-- [ ] verbose/debug 출력 테스트
+- [x] ingestion persistence에 embedding metadata 저장 보강
+- [x] RAG query service 추가
+- [x] CLI smoke command 추가
+- [x] no evidence 처리
+- [x] verbose/debug 출력 테스트
 
 ## Dev Notes
 
@@ -35,6 +35,19 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 75 passed
+
 ### Completion Notes List
 
+- Persisted embedding vectors into chunk metadata during ingestion.
+- Added RAG query service wiring retriever, citation hydration, and answer composer.
+- Added single-question CLI with answer, citations, insufficient evidence, and debug output.
+
 ### File List
+
+- `backend/app/services/ingest_service.py`
+- `backend/app/rag/query.py`
+- `backend/scripts/ingest_file.py`
+- `backend/scripts/rag_query.py`
+- `backend/README.md`
+- `backend/tests/test_story_3_5_rag_cli.py`

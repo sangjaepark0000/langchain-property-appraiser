@@ -85,13 +85,18 @@ def persist_ingested_item(item: IngestedItem, session: Session) -> int:
     )
     session.add(document_model)
     session.flush()
-    for chunk in item.chunks:
+    for chunk, embedding in zip(item.chunks, item.embeddings, strict=True):
+        metadata = dict(chunk.metadata)
+        if embedding.status == "success" and embedding.vector:
+            metadata["embedding"] = embedding.vector
+            metadata["embedding_provider"] = embedding.provider
+            metadata["embedding_fallback"] = embedding.fallback
         session.add(
             Chunk(
                 document_id=document_model.id,
                 chunk_index=chunk.chunk_index,
                 text=chunk.text,
-                metadata_=chunk.metadata,
+                metadata_=metadata,
                 source_lineage=chunk.lineage,
                 char_start=chunk.char_start,
                 char_end=chunk.char_end,
