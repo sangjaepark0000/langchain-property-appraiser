@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from sqlalchemy import text as sql_text
 from sqlalchemy.orm import Session
@@ -9,6 +10,9 @@ from sqlalchemy.orm import Session
 from app.models.chunk import Chunk
 from app.models.document import Document  # noqa: F401 - ensure relationship registration
 from app.rag.embeddings import EmbeddingProvider, get_embedding_provider
+
+if TYPE_CHECKING:
+    from app.rag.recent_filter import RecentPeriodFilter
 
 
 @dataclass(frozen=True)
@@ -51,6 +55,7 @@ class VectorRetriever:
         query_vector: list[float] | None = None,
         limit: int = 5,
         min_score: float = 0.0,
+        recent_filter: "RecentPeriodFilter | None" = None,
     ) -> list[RetrievalResult]:
         if limit <= 0:
             return []
@@ -64,6 +69,10 @@ class VectorRetriever:
         if self.session.bind is not None and self.session.bind.dialect.name == "postgresql":
             pgvector_results = self._search_pgvector(resolved_query_vector, limit=limit, min_score=min_score)
             if pgvector_results:
+                if recent_filter is not None:
+                    from app.rag.recent_filter import apply_recent_period_filter
+
+                    return apply_recent_period_filter(self.session, pgvector_results, recent_filter).results
                 return pgvector_results
 
         candidates: list[RetrievalResult] = []
@@ -88,7 +97,12 @@ class VectorRetriever:
                 )
             )
         candidates.sort(key=lambda result: result.score, reverse=True)
-        return candidates[:limit]
+        limited = candidates[:limit]
+        if recent_filter is not None:
+            from app.rag.recent_filter import apply_recent_period_filter
+
+            return apply_recent_period_filter(self.session, limited, recent_filter).results
+        return limited
 
     def _search_pgvector(self, query_vector: list[float], *, limit: int, min_score: float) -> list[RetrievalResult]:
         vector_literal = "[" + ",".join(str(float(value)) for value in query_vector) + "]"
