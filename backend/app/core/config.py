@@ -27,6 +27,7 @@ class Settings(BaseSettings):
 
     embedding_provider: str = Field(default="none", alias="EMBEDDING_PROVIDER")
     embedding_api_key: str | None = Field(default=None, alias="EMBEDDING_API_KEY")
+    embedding_dimensions: int = Field(default=16, alias="EMBEDDING_DIMENSIONS")
 
     langsmith_tracing: bool = Field(default=False, alias="LANGSMITH_TRACING")
     langsmith_api_key: str | None = Field(default=None, alias="LANGSMITH_API_KEY")
@@ -58,6 +59,7 @@ class Settings(BaseSettings):
             "has_llm_api_key": self.has_llm_api_key,
             "embedding_provider": self.embedding_provider,
             "has_embedding_api_key": self.has_embedding_api_key,
+            "embedding_dimensions": self.embedding_dimensions,
             "langsmith_tracing_enabled": self.langsmith_tracing_enabled,
             "langsmith_project": self.langsmith_project,
         }

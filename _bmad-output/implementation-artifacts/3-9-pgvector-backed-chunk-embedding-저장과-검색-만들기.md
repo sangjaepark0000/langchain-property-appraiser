@@ -1,6 +1,6 @@
 # Story 3.9: pgvector-backed chunk embedding 저장과 검색 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -18,12 +18,12 @@ so that RAG retrieval이 smoke용 JSON metadata fallback에서 production-orient
 
 ## Tasks / Subtasks
 
-- [ ] pgvector dependency와 설정 추가
-- [ ] portable SQLAlchemy vector type 추가
-- [ ] chunks.embedding model/migration 추가
-- [ ] ingestion persistence vector column 저장
-- [ ] PostgreSQL pgvector search path + metadata fallback 구현
-- [ ] tests/docs 업데이트
+- [x] pgvector dependency와 설정 추가
+- [x] portable SQLAlchemy vector type 추가
+- [x] chunks.embedding model/migration 추가
+- [x] ingestion persistence vector column 저장
+- [x] PostgreSQL pgvector search path + metadata fallback 구현
+- [x] tests/docs 업데이트
 
 ## Dev Notes
 
@@ -39,6 +39,24 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 89 passed
+- Docker PostgreSQL Alembic upgrade head → vector extension and `chunks.embedding vector(16)` verified
+
 ### Completion Notes List
 
+- Added pgvector dependency, embedding dimension setting, and portable vector SQLAlchemy type.
+- Added `chunks.embedding` model field and Alembic pgvector migration with HNSW cosine index.
+- Ingestion persists embeddings to both vector column and metadata fallback.
+- Retriever prefers PostgreSQL pgvector path and retains sqlite/local metadata fallback.
+
 ### File List
+
+- `backend/pyproject.toml`
+- `backend/app/core/config.py`
+- `backend/app/db/vector.py`
+- `backend/app/models/chunk.py`
+- `backend/alembic/versions/20260517_0003_chunk_embedding_pgvector.py`
+- `backend/app/services/ingest_service.py`
+- `backend/app/rag/retriever.py`
+- `backend/README.md`
+- `backend/tests/test_story_3_9_pgvector_retrieval.py`
