@@ -1,0 +1,20 @@
+# Root BMAD configuration for modules that expect the YAML layout.
+
+user_name: PSJ
+project_name: langchain-property-appraiser
+communication_language: korean
+document_output_language: korean
+output_folder: "{project-root}/_bmad-output"
+
+bad:
+  max_parallel_stories: "3"
+  worktree_base_path: ".worktrees"
+  auto_pr_merge: false
+  run_ci_locally: false
+  wait_timer_seconds: "3600"
+  retro_timer_seconds: "600"
+  context_compaction_threshold: "80"
+  stale_timeout_minutes: "60"
+  timer_support: false
+  monitor_support: false
+  api_usage_threshold: "80"
