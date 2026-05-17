@@ -1,6 +1,6 @@
 # Story 5.2: Chat input과 message list 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that 버튼 중심 workflow 없이 챗봇과 대화할 수 있다.
 
 ## Tasks / Subtasks
 
-- [ ] ChatInput component 추가
-- [ ] MessageList component 추가
-- [ ] page에서 component 조합
-- [ ] empty submit guard와 reset 유지
-- [ ] tests 추가
+- [x] ChatInput component 추가
+- [x] MessageList component 추가
+- [x] page에서 component 조합
+- [x] empty submit guard와 reset 유지
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -34,6 +34,17 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 127 passed
+
 ### Completion Notes List
 
+- Split chat UI into `ChatInput` and `MessageList` components.
+- Input supports Enter/form submit, empty question guard, and reset after submit.
+- Message list preserves order and visually distinguishes user/assistant turns.
+
 ### File List
+
+- `frontend/src/lib/components/ChatInput.svelte`
+- `frontend/src/lib/components/MessageList.svelte`
+- `frontend/src/routes/+page.svelte`
+- `backend/tests/test_story_5_2_chat_input_message_list.py`
