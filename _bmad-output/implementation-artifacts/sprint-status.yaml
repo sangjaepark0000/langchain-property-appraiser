@@ -72,7 +72,7 @@ development_status:
   3-9-pgvector-backed-chunk-embedding-저장과-검색-만들기: done
   epic-3-retrospective: done
 
-  epic-4: in-progress
+  epic-4: done
   4-1-conversation과-message-저장-모델-만들기: done
   4-2-retrieval-trace-저장-모델-만들기: done
   4-3-langgraph-conversation-state-기본-흐름-만들기: done
@@ -81,7 +81,7 @@ development_status:
   4-6-insufficient-evidence-응답-경로-만들기: done
   4-7-multi-turn-chat-api-contract-확장하기: done
   4-8-3턴-대화-smoke-test-만들기: done
-  epic-4-retrospective: optional
+  epic-4-retrospective: done
 
   epic-5: backlog
   5-1-sveltekit-frontend-초기화와-기본-레이아웃-만들기: backlog
