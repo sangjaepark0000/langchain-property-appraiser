@@ -1,6 +1,6 @@
 # Story 3.2: Vector retrieval 기본 검색 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that RAG 답변 생성 전에 관련 근거 chunk를 찾을 수 있다.
 
 ## Tasks / Subtasks
 
-- [ ] Retrieval result schema 추가
-- [ ] cosine similarity 기반 configured vector retriever 추가
-- [ ] stored chunk metadata embedding 지원
-- [ ] empty result 처리
-- [ ] 테스트 추가
+- [x] Retrieval result schema 추가
+- [x] cosine similarity 기반 configured vector retriever 추가
+- [x] stored chunk metadata embedding 지원
+- [x] empty result 처리
+- [x] 테스트 추가
 
 ## Dev Notes
 
@@ -35,6 +35,15 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 63 passed
+
 ### Completion Notes List
 
+- Added RAG-layer vector retriever using configured vector search over stored chunk metadata embeddings.
+- Added cosine similarity, relevance labels, result schema, and empty-result handling.
+- Avoided schema migration by reading vectors from `chunks.metadata.embedding`.
+
 ### File List
+
+- `backend/app/rag/retriever.py`
+- `backend/tests/test_story_3_2_retriever.py`

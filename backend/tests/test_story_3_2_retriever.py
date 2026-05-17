@@ -27,7 +27,7 @@ def add_doc_with_chunk(session, text: str, embedding: list[float], *, source_id:
         source_name=f"{source_id}.md",
         source_type="markdown",
         data_mode="sample",
-        ingestion_status="ingested",
+        ingestion_status="loaded",
         metadata_={"source_id": source_id},
     )
     session.add(doc)
@@ -86,7 +86,7 @@ def test_retriever_returns_empty_list_when_no_vector_chunks(db_session):
         source_name="no-vector.md",
         source_type="markdown",
         data_mode="sample",
-        ingestion_status="ingested",
+        ingestion_status="loaded",
         metadata_={},
     )
     db_session.add(doc)
