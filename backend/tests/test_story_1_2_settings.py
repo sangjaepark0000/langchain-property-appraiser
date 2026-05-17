@@ -59,6 +59,24 @@ def test_langsmith_tracing_requires_api_key(monkeypatch):
     assert settings.langsmith_tracing_enabled is False
 
 
+def test_public_settings_summary_does_not_expose_secret_values(monkeypatch):
+    monkeypatch.setenv("LLM_API_KEY", "sentinel-llm-secret")
+    monkeypatch.setenv("EMBEDDING_API_KEY", "sentinel-embedding-secret")
+    monkeypatch.setenv("LANGSMITH_API_KEY", "sentinel-langsmith-secret")
+
+    from app.core.config import Settings
+
+    summary = Settings().public_summary()
+    summary_text = repr(summary)
+
+    assert "sentinel-llm-secret" not in summary_text
+    assert "sentinel-embedding-secret" not in summary_text
+    assert "sentinel-langsmith-secret" not in summary_text
+    assert summary["has_llm_api_key"] is True
+    assert summary["has_embedding_api_key"] is True
+    assert summary["langsmith_tracing_enabled"] is False
+
+
 def test_env_example_documents_required_settings_without_real_secrets():
     env_example = (REPO_ROOT / ".env.example").read_text()
 
