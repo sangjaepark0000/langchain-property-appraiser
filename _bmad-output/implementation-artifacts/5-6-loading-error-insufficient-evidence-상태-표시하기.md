@@ -1,6 +1,6 @@
 # Story 5.6: Loading, error, insufficient evidence 상태 표시하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,10 +16,10 @@ so that 시스템이 멈췄는지, 실패했는지, 근거가 부족한지 구�
 
 ## Tasks / Subtasks
 
-- [ ] StatusPanel component 추가
-- [ ] loading/error/insufficient 상태 enum 또는 문자열 관리
-- [ ] page status flow 정리
-- [ ] tests 추가
+- [x] StatusPanel component 추가
+- [x] loading/error/insufficient 상태 enum 또는 문자열 관리
+- [x] page status flow 정리
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -33,6 +33,16 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 139 passed
+
 ### Completion Notes List
 
+- Added status panel with ready/loading/insufficient_evidence/error states.
+- Page now sets loading before backend call, insufficient_evidence on evidence-poor responses, and error only on API failures.
+- Error path leaves input retryable after request completion.
+
 ### File List
+
+- `frontend/src/lib/components/StatusPanel.svelte`
+- `frontend/src/routes/+page.svelte`
+- `backend/tests/test_story_5_6_frontend_status_states.py`
