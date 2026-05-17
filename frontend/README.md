@@ -33,3 +33,12 @@ VITE_API_BASE_URL=http://localhost:8000 npm run dev
 - `src/lib/api/chat.ts` contains the simple backend API call.
 
 No global state manager is used in V1.
+
+## Smoke checks
+
+Backend/frontend contract smoke without browser automation:
+
+```bash
+cd ../backend
+python scripts/web_chat_smoke.py --database-url sqlite+pysqlite:///./web-chat-smoke.db
+```
