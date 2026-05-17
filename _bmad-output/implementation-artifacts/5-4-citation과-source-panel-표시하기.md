@@ -1,6 +1,6 @@
 # Story 5.4: Citation과 source panel 표시하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that 답변이 어떤 문서에 기반했는지 판단할 수 있다.
 
 ## Tasks / Subtasks
 
-- [ ] Citation type 정리
-- [ ] CitationPanel component 추가
-- [ ] assistant message에 citations 연결
-- [ ] unknown fallback 표시
-- [ ] tests 추가
+- [x] Citation type 정리
+- [x] CitationPanel component 추가
+- [x] assistant message에 citations 연결
+- [x] unknown fallback 표시
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -34,6 +34,17 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 133 passed
+
 ### Completion Notes List
 
+- Added `CitationPanel` for source name/path, chunk index, and data mode.
+- Assistant messages now carry citations from backend responses and render answer body separately from sources.
+- Unknown citation fields are displayed as `unknown`; frontend does not fabricate official URLs/articles.
+
 ### File List
+
+- `frontend/src/lib/components/CitationPanel.svelte`
+- `frontend/src/lib/components/MessageList.svelte`
+- `frontend/src/routes/+page.svelte`
+- `backend/tests/test_story_5_4_frontend_citations.py`

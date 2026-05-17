@@ -1,7 +1,10 @@
 <script lang="ts">
+  import CitationPanel, { type Citation } from './CitationPanel.svelte';
+
   export type ChatMessage = {
     role: 'assistant' | 'user';
     content: string;
+    citations?: Citation[];
   };
 
   type Props = {
@@ -15,7 +18,10 @@
   {#each messages as message}
     <article class:assistant={message.role === 'assistant'} class:user={message.role === 'user'}>
       <span>{message.role}</span>
-      <p>{message.content}</p>
+      <p class="answer-body">{message.content}</p>
+      {#if message.role === 'assistant' && message.citations}
+        <CitationPanel citations={message.citations} />
+      {/if}
     </article>
   {/each}
 </div>
@@ -43,7 +49,7 @@
     text-transform: uppercase;
   }
 
-  article p {
+  .answer-body {
     margin: 0;
   }
 

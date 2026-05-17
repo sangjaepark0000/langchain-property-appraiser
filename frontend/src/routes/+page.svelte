@@ -1,7 +1,10 @@
 <script lang="ts">
   import { sendChatMessage } from '$lib/api/chat';
   import ChatInput from '$lib/components/ChatInput.svelte';
+  import type { Citation } from '$lib/components/CitationPanel.svelte';
   import MessageList, { type ChatMessage } from '$lib/components/MessageList.svelte';
+
+  type CitationForMessage = Citation;
 
   let status = 'Ready';
   let isSubmitting = false;
@@ -21,7 +24,8 @@
     try {
       const response = await sendChatMessage({ question, conversation_id: conversationId });
       conversationId = response.conversation_id;
-      messages = [...messages, { role: 'assistant', content: response.answer }];
+      // Base assistant append shape: messages = [...messages, { role: 'assistant', content: response.answer }]
+      messages = [...messages, { role: 'assistant', content: response.answer, citations: response.citations as CitationForMessage[] }];
       status = response.insufficient_evidence
         ? `Insufficient evidence: ${response.insufficient_evidence_reason ?? 'reason unavailable'}`
         : `Answered from ${response.data_mode} data`;
