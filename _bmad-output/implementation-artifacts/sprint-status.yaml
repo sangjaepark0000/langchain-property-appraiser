@@ -98,7 +98,7 @@ development_status:
   6-2-공식-source-후보-우선순위와-지원-상태-확정하기: done
   6-3-첫-official-source-loader-parser-구현하기: done
   6-4-official-data-ingestion-smoke-test-만들기: done
-  6-5-최근-x기간-필터-설계와-검색-조건-연결하기: backlog
+  6-5-최근-x기간-필터-설계와-검색-조건-연결하기: atdd-done
   6-6-알림-레벨을-작업-우선순위로-정의하기: backlog
   6-7-domain-safety-policy와-response-copy-정리하기: backlog
   epic-6-retrospective: optional
