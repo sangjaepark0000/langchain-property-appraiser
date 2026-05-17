@@ -113,6 +113,26 @@ cd backend
 python -m alembic -c alembic.ini upgrade head
 ```
 
+## Ingestion Smoke
+
+Run a no-DB ingestion smoke command from `backend/`:
+
+```bash
+python scripts/ingest_file.py ../sample_data/sample-property-notes.md --no-persist
+```
+
+Run a DB-backed ingestion after starting Docker and applying migrations:
+
+```bash
+docker compose up -d db
+cd backend
+python -m alembic -c alembic.ini upgrade head
+python scripts/ingest_file.py ../sample_data/sample-property-notes.md
+python scripts/list_ingested.py
+```
+
+Unsupported files are reported in `unsupported_files` and are not counted as successful ingestion.
+
 ## Smoke Check
 
 Run the minimal backend smoke check from `backend/`:
