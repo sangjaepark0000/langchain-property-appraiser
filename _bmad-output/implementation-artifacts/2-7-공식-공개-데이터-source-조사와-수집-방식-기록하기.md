@@ -1,6 +1,6 @@
 # Story 2.7: 공식/공개 데이터 source 조사와 수집 방식 기록하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -24,11 +24,11 @@ so that 실제 scraping 또는 API ingestion을 구현하기 전에 어떤 sourc
 
 ## Tasks / Subtasks
 
-- [ ] 공식 법령/API source 조사
-- [ ] 국토교통부 고시/행정규칙 source 조사
-- [ ] 공공데이터포털 부동산 공시가격 source 조사
-- [ ] source inventory 업데이트
-- [ ] 문서 테스트 추가
+- [x] 공식 법령/API source 조사
+- [x] 국토교통부 고시/행정규칙 source 조사
+- [x] 공공데이터포털 부동산 공시가격 source 조사
+- [x] source inventory 업데이트
+- [x] 문서 테스트 추가
 
 ## Dev Notes
 
@@ -43,6 +43,15 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 55 passed
+
 ### Completion Notes List
 
+- Researched official/public source candidates with minimal web search.
+- Updated source inventory with access method, formats, auth/key expectation, priority, and next loader work.
+- Kept official sources deferred, not ingested, to avoid confusing sample/local data with official data.
+
 ### File List
+
+- `docs/source-inventory.md`
+- `backend/tests/test_story_2_7_source_inventory_research.py`
