@@ -1,6 +1,6 @@
 # Story 2.1: Document와 Chunk 저장 모델 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,19 +16,19 @@ so that ingestion 결과를 source metadata와 함께 추적 가능한 형태로
 
 ## Tasks / Subtasks
 
-- [ ] SQLAlchemy models 추가 (AC: 1, 2, 3)
-  - [ ] `backend/app/models/document.py`
-  - [ ] `backend/app/models/chunk.py`
-  - [ ] Document ↔ Chunk relationship
-  - [ ] data_mode와 ingestion_status enum/check 제약
-- [ ] Alembic migration 추가 (AC: 1)
-  - [ ] documents table 생성
-  - [ ] chunks table 생성
-  - [ ] FK/index 최소 구성
-- [ ] 테스트 추가 (AC: 1, 2, 3)
-  - [ ] model metadata/table/column 정적 검증
-  - [ ] migration이 documents/chunks를 생성하는지 검증
-  - [ ] local DB 가능 시 upgrade head 검증
+- [x] SQLAlchemy models 추가 (AC: 1, 2, 3)
+  - [x] `backend/app/models/document.py`
+  - [x] `backend/app/models/chunk.py`
+  - [x] Document ↔ Chunk relationship
+  - [x] data_mode와 ingestion_status enum/check 제약
+- [x] Alembic migration 추가 (AC: 1)
+  - [x] documents table 생성
+  - [x] chunks table 생성
+  - [x] FK/index 최소 구성
+- [x] 테스트 추가 (AC: 1, 2, 3)
+  - [x] model metadata/table/column 정적 검증
+  - [x] migration이 documents/chunks를 생성하는지 검증
+  - [x] local DB 가능 시 upgrade head 검증
 
 ## Dev Notes
 
@@ -44,6 +44,21 @@ TBD by dev agent
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 31 passed
+- `docker compose up -d db && cd backend && python -m alembic -c alembic.ini upgrade head` → documents/chunks created, version `20260517_0002`
+
 ### Completion Notes List
 
+- Added Document and Chunk SQLAlchemy models with metadata, data mode, ingestion status, lineage, and relationship.
+- Added Alembic migration creating `documents` and `chunks` tables.
+- Updated Alembic env to import models for metadata registration.
+- Adjusted baseline migration test to validate only the baseline revision now that later migrations exist.
+
 ### File List
+
+- `backend/app/models/document.py`
+- `backend/app/models/chunk.py`
+- `backend/alembic/env.py`
+- `backend/alembic/versions/20260517_0002_documents_chunks.py`
+- `backend/tests/test_story_1_4_alembic_foundation.py`
+- `backend/tests/test_story_2_1_document_chunk_models.py`

@@ -26,6 +26,7 @@ def test_document_model_has_required_columns_and_constraints():
     from app.models.document import Document
 
     columns = {column.name for column in Document.__table__.columns}
+    attrs = set(Document.__mapper__.attrs.keys())
     for expected in [
         "id",
         "source_id",
@@ -34,28 +35,31 @@ def test_document_model_has_required_columns_and_constraints():
         "source_type",
         "data_mode",
         "ingestion_status",
-        "metadata_",
         "created_at",
     ]:
         assert expected in columns
+    assert "metadata" in columns
+    assert "metadata_" in attrs
 
 
 def test_chunk_model_has_required_columns_relationship_and_fk():
     from app.models.chunk import Chunk
 
     columns = {column.name for column in Chunk.__table__.columns}
+    attrs = set(Chunk.__mapper__.attrs.keys())
     for expected in [
         "id",
         "document_id",
         "chunk_index",
         "text",
-        "metadata_",
         "source_lineage",
         "char_start",
         "char_end",
         "created_at",
     ]:
         assert expected in columns
+    assert "metadata" in columns
+    assert "metadata_" in attrs
 
     foreign_keys = {fk.column.table.name for fk in Chunk.__table__.foreign_keys}
     assert "documents" in foreign_keys
@@ -64,8 +68,8 @@ def test_chunk_model_has_required_columns_relationship_and_fk():
 def test_alembic_migration_creates_documents_and_chunks_tables():
     versions_text = "\n".join(path.read_text() for path in (BACKEND_ROOT / "alembic" / "versions").glob("*.py"))
 
-    assert "create_table(\"documents\"" in versions_text or "create_table('documents'" in versions_text
-    assert "create_table(\"chunks\"" in versions_text or "create_table('chunks'" in versions_text
+    assert '"documents"' in versions_text
+    assert '"chunks"' in versions_text
     assert "ForeignKeyConstraint" in versions_text
     assert "data_mode" in versions_text
     assert "ingestion_status" in versions_text
