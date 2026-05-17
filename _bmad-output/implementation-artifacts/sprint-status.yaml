@@ -85,7 +85,7 @@ development_status:
 
   epic-5: backlog
   5-1-sveltekit-frontend-초기화와-기본-레이아웃-만들기: done
-  5-2-chat-input과-message-list-만들기: review
+  5-2-chat-input과-message-list-만들기: done
   5-3-backend-chat-api-연결하기: backlog
   5-4-citation과-source-panel-표시하기: backlog
   5-5-data-mode와-safety-상태-표시하기: backlog
