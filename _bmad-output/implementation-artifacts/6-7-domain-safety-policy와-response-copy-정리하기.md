@@ -1,6 +1,6 @@
 # Story 6.7: Domain safety policy와 response copy 정리하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,10 +16,10 @@ so that 시스템 응답을 최종 법률·전문 판단으로 오해하지 않�
 
 ## Tasks / Subtasks
 
-- [ ] reusable domain safety copy module 추가
-- [ ] official metadata 부족 copy 추가
-- [ ] prohibited language tests 추가
-- [ ] docs 추가
+- [x] reusable domain safety copy module 추가
+- [x] official metadata 부족 copy 추가
+- [x] prohibited language tests 추가
+- [x] docs 추가
 
 ## Dev Notes
 
@@ -33,6 +33,16 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 165 passed
+
 ### Completion Notes List
 
+- Added reusable domain safety copy module.
+- Added missing official metadata notice that requires source confirmation and forbids fabrication.
+- Documented domain safety policy, prohibited copy, manual supplementation boundary, agent limitation, and prerequisites.
+
 ### File List
+
+- `backend/app/domain/safety_copy.py`
+- `backend/tests/test_story_6_7_domain_safety_copy.py`
+- `docs/domain-safety-policy.md`
