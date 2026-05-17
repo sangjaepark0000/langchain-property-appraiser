@@ -65,7 +65,8 @@ def test_configured_provider_is_used_through_abstraction():
 
     result = compose_answer("question", [make_result("evidence text")], provider=StaticProvider())
 
-    assert result.answer == "provider answer"
+    assert "provider answer" in result.answer
+    assert "sample/local data" in result.answer
     assert result.provider == "static-provider"
     assert result.fallback is False
     assert result.citations

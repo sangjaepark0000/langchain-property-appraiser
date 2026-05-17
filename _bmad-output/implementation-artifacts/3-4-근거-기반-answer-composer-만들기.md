@@ -1,6 +1,6 @@
 # Story 3.4: 근거 기반 answer composer 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -17,12 +17,12 @@ so that 답변 내용과 근거를 함께 확인할 수 있다.
 
 ## Tasks / Subtasks
 
-- [ ] answer result schema 추가
-- [ ] LLM provider protocol/fallback 추가
-- [ ] extractive answer composer 추가
-- [ ] citations/data mode 포함
-- [ ] insufficient evidence 처리
-- [ ] 테스트 추가
+- [x] answer result schema 추가
+- [x] LLM provider protocol/fallback 추가
+- [x] extractive answer composer 추가
+- [x] citations/data mode 포함
+- [x] insufficient evidence 처리
+- [x] 테스트 추가
 
 ## Dev Notes
 
@@ -37,6 +37,15 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 71 passed
+
 ### Completion Notes List
 
+- Added answer provider abstraction and deterministic extractive fallback.
+- Added AnswerResult with citations, data mode, official flag, provider, and fallback status.
+- Added insufficient evidence response and sample/local answer labeling.
+
 ### File List
+
+- `backend/app/rag/answer.py`
+- `backend/tests/test_story_3_4_answer_composer.py`
