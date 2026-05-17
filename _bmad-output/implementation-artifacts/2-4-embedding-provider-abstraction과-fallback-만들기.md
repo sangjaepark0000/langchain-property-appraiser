@@ -1,6 +1,6 @@
 # Story 2.4: Embedding provider abstraction과 fallback 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that local smoke test가 외부 provider credentials 때문에 막히지 않�
 
 ## Tasks / Subtasks
 
-- [ ] Embedding provider protocol/result 추가
-- [ ] deterministic fake embedding provider 추가
-- [ ] provider factory 추가
-- [ ] failure/skip 상태 표현
-- [ ] 테스트 추가
+- [x] Embedding provider protocol/result 추가
+- [x] deterministic fake embedding provider 추가
+- [x] provider factory 추가
+- [x] failure/skip 상태 표현
+- [x] 테스트 추가
 
 ## Dev Notes
 
@@ -35,6 +35,15 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 43 passed
+
 ### Completion Notes List
 
+- Added embedding provider protocol and result object.
+- Added deterministic fake embedding fallback.
+- Added provider factory and partial failure tracking helper.
+
 ### File List
+
+- `backend/app/rag/embeddings.py`
+- `backend/tests/test_story_2_4_embeddings.py`
