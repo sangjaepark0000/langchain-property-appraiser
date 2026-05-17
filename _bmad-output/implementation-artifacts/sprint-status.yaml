@@ -61,7 +61,7 @@ development_status:
   epic-2-retrospective: done
 
   epic-3: in-progress
-  3-1-rag-smoke-test용-sample-knowledge-fixture-만들기: atdd-done
+  3-1-rag-smoke-test용-sample-knowledge-fixture-만들기: review
   3-2-vector-retrieval-기본-검색-만들기: backlog
   3-3-citation과-source-metadata-포함-검색-결과-만들기: backlog
   3-4-근거-기반-answer-composer-만들기: backlog

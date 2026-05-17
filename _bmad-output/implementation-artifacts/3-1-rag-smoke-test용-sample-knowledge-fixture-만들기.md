@@ -1,6 +1,6 @@
 # Story 3.1: RAG smoke test용 sample knowledge fixture 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that official data 없이도 RAG Core 동작을 안전하게 검증할 수 �
 
 ## Tasks / Subtasks
 
-- [ ] sample knowledge 문서 2개 이상 추가
-- [ ] sample disclaimer 명시
-- [ ] expected Q&A fixture 문서/JSON 추가
-- [ ] no evidence expectation 추가
-- [ ] 테스트 추가
+- [x] sample knowledge 문서 2개 이상 추가
+- [x] sample disclaimer 명시
+- [x] expected Q&A fixture 문서/JSON 추가
+- [x] no evidence expectation 추가
+- [x] 테스트 추가
 
 ## Dev Notes
 
@@ -35,6 +35,19 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 59 passed
+
 ### Completion Notes List
 
+- Added two fictional sample knowledge documents for RAG smoke tests.
+- Added expected smoke questions with citation/source path expectations and insufficient evidence case.
+- Updated sample disclaimers to avoid confusing sample data with official data.
+
 ### File List
+
+- `sample_data/sample-property-alpha.md`
+- `sample_data/sample-property-beta.md`
+- `sample_data/sample-property-notes.md`
+- `sample_data/rag-smoke-questions.json`
+- `sample_data/README.md`
+- `backend/tests/test_story_3_1_sample_fixtures.py`
