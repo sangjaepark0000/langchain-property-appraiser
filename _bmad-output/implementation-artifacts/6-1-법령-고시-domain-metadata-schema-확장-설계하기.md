@@ -1,6 +1,6 @@
 # Story 6.1: 법령·고시 domain metadata schema 확장 설계하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -17,11 +17,11 @@ so that 향후 official source ingestion 시 개정일, 시행일, 조항, 출�
 
 ## Tasks / Subtasks
 
-- [ ] domain metadata schema 문서 추가
-- [ ] canonical document schema와 연결
-- [ ] missing metadata/fabrication 금지 규칙 명시
-- [ ] manual supplementation / agent limitation / prerequisite notes 추가
-- [ ] tests 추가
+- [x] domain metadata schema 문서 추가
+- [x] canonical document schema와 연결
+- [x] missing metadata/fabrication 금지 규칙 명시
+- [x] manual supplementation / agent limitation / prerequisite notes 추가
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -35,6 +35,17 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 145 passed
+
 ### Completion Notes List
 
+- Added domain metadata schema contract under `docs/domain-metadata-schema.md`.
+- Defined official source fields, date semantics, missing-value policy, and fabrication prohibition.
+- Documented manual supplementation workflow, current agent limitations, and prerequisite work for safer automation.
+- Linked canonical document schema to the domain metadata extension without adding DB columns.
+
 ### File List
+
+- `docs/domain-metadata-schema.md`
+- `docs/canonical-document-schema.md`
+- `backend/tests/test_story_6_1_domain_metadata_schema.py`

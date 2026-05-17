@@ -94,7 +94,7 @@ development_status:
   epic-5-retrospective: done
 
   epic-6: in-progress
-  6-1-법령-고시-domain-metadata-schema-확장-설계하기: atdd-done
+  6-1-법령-고시-domain-metadata-schema-확장-설계하기: review
   6-2-공식-source-후보-우선순위와-지원-상태-확정하기: backlog
   6-3-첫-official-source-loader-parser-구현하기: backlog
   6-4-official-data-ingestion-smoke-test-만들기: backlog
