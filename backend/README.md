@@ -137,6 +137,12 @@ Ask a single local RAG smoke question after ingestion:
 python scripts/rag_query.py "What roof color is stated for Fictional Parcel Alpha?" --debug
 ```
 
+Run automated RAG API/CLI smoke checks without external keys:
+
+```bash
+python scripts/rag_smoke.py --database-url sqlite+pysqlite:///./rag-smoke.db
+```
+
 Unsupported files are reported in `unsupported_files` and are not counted as successful ingestion. The CLI also prints one source-level summary line per file with `status`, `documents`, `chunks`, and failure reason when present.
 
 ## Smoke Check

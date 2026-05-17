@@ -1,6 +1,6 @@
 # Story 3.8: RAG API/CLI smoke test 자동화하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that 이후 CRAG와 웹 UI 구현 전에 regression을 줄일 수 있다.
 
 ## Tasks / Subtasks
 
-- [ ] automated RAG smoke script 추가
-- [ ] CLI path smoke 검증
-- [ ] API contract smoke 검증
-- [ ] no evidence smoke 검증
-- [ ] README 문서화
+- [x] automated RAG smoke script 추가
+- [x] CLI path smoke 검증
+- [x] API contract smoke 검증
+- [x] no evidence smoke 검증
+- [x] README 문서화
 
 ## Dev Notes
 
@@ -34,6 +34,18 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 84 passed
+- `python scripts/rag_smoke.py --database-url sqlite+pysqlite:///...` covered by test
+
 ### Completion Notes List
 
+- Added automated RAG smoke script covering sample ingestion, CLI query, API contract, no evidence, and official hallucination checks.
+- Smoke flow runs with sqlite and local fallback providers, no external keys.
+- Documented smoke command.
+
 ### File List
+
+- `backend/scripts/rag_smoke.py`
+- `backend/app/rag/retriever.py`
+- `backend/README.md`
+- `backend/tests/test_story_3_8_rag_smoke.py`
