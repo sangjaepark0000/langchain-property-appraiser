@@ -1,6 +1,6 @@
 # Story 4.2: Retrieval trace 저장 모델 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that RAG/CRAG 실행 흐름과 근거 부족 원인을 디버깅할 수 있�
 
 ## Tasks / Subtasks
 
-- [ ] RetrievalTrace SQLAlchemy 모델 추가
-- [ ] Alembic migration 추가
-- [ ] trace service 추가
-- [ ] query redaction/summary 정책 추가
-- [ ] tests 추가
+- [x] RetrievalTrace SQLAlchemy 모델 추가
+- [x] Alembic migration 추가
+- [x] trace service 추가
+- [x] query redaction/summary 정책 추가
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -35,6 +35,19 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 100 passed
+- Docker PostgreSQL Alembic upgrade head → `retrieval_traces`, version `20260517_0006` verified
+
 ### Completion Notes List
 
+- Added RetrievalTrace model and migration.
+- Added trace service with query preview/hash policy instead of storing excessive raw query text.
+- Supports optional conversation/message links, rewrite metadata, chunk ids, relevance result, insufficient evidence reason, and summary.
+
 ### File List
+
+- `backend/app/models/retrieval_trace.py`
+- `backend/alembic/versions/20260517_0006_retrieval_traces.py`
+- `backend/alembic/env.py`
+- `backend/app/services/retrieval_trace_service.py`
+- `backend/tests/test_story_4_2_retrieval_trace.py`
