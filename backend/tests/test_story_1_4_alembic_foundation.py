@@ -41,7 +41,7 @@ def test_baseline_migration_does_not_create_domain_tables():
     versions = list((BACKEND_ROOT / "alembic" / "versions").glob("*.py"))
     assert versions, "Expected a baseline Alembic revision"
 
-    migration_text = "\n".join(path.read_text() for path in versions)
+    migration_text = next(path.read_text() for path in versions if "baseline" in path.name)
     assert "create_table" not in migration_text
     assert "documents" not in migration_text
     assert "chunks" not in migration_text
