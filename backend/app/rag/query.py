@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.rag.answer import AnswerResult, compose_answer
 from app.rag.citations import hydrate_retrieval_results
 from app.rag.grading import RetrievalGrade, grade_retrieval_results
+from app.rag.insufficient import insufficient_evidence_reason
 from app.rag.retriever import VectorRetriever
 from app.rag.rewrite import QueryRewriteResult, rewrite_query
 from app.services.retrieval_trace_service import create_retrieval_trace
@@ -20,6 +21,8 @@ class RAGQueryResult:
     results: list[dict]
     grading: RetrievalGrade
     rewrite: QueryRewriteResult
+    insufficient_evidence: bool
+    insufficient_evidence_reason: str | None
 
 
 def _empty_rewrite(question: str) -> QueryRewriteResult:
@@ -66,7 +69,7 @@ def answer_question(
                 grading = rewritten_grading
 
     hydrated = hydrate_retrieval_results(session, raw_results) if grading.status == "sufficient" else []
-    insufficient_reason = None if grading.status == "sufficient" else grading.reason or grading.status
+    insufficient_reason = None if grading.status == "sufficient" else insufficient_evidence_reason(question, grading.reason or grading.status)
     answer = compose_answer(question, hydrated)
     create_retrieval_trace(
         session,
@@ -85,6 +88,8 @@ def answer_question(
             "rewrite_status": rewrite.status,
             "rewrite_fallback": rewrite.fallback,
             "rewrite_attempts": min(rewrite.attempts, max_rewrite_attempts),
+            "insufficient_evidence": grading.status != "sufficient",
+            "insufficient_evidence_reason": insufficient_reason,
         },
     )
     return RAGQueryResult(
@@ -94,4 +99,6 @@ def answer_question(
         results=hydrated,
         grading=grading,
         rewrite=rewrite,
+        insufficient_evidence=grading.status != "sufficient",
+        insufficient_evidence_reason=insufficient_reason,
     )

@@ -29,6 +29,8 @@ class ConversationGraphState(TypedDict, total=False):
     answer: AnswerResult
     grading: RetrievalGrade
     rewrite: QueryRewriteResult
+    insufficient_evidence: bool
+    insufficient_evidence_reason: str | None
 
 
 @dataclass(frozen=True)
@@ -37,6 +39,8 @@ class ConversationGraphResult:
     answer: AnswerResult
     grading: RetrievalGrade
     rewrite: QueryRewriteResult
+    insufficient_evidence: bool = False
+    insufficient_evidence_reason: str | None = None
     history: list[Message] = field(default_factory=list)
 
 
@@ -83,6 +87,8 @@ def build_conversation_graph(session: Session):
         state["answer"] = rag_result.answer
         state["grading"] = rag_result.grading
         state["rewrite"] = rag_result.rewrite
+        state["insufficient_evidence"] = rag_result.insufficient_evidence
+        state["insufficient_evidence_reason"] = rag_result.insufficient_evidence_reason
         return state
 
     def persist_assistant(state: ConversationGraphState) -> ConversationGraphState:
@@ -101,6 +107,8 @@ def build_conversation_graph(session: Session):
                 "retrieval_grading": state["grading"].status,
                 "rewrite_status": state["rewrite"].status,
                 "rewrite_fallback": state["rewrite"].fallback,
+                "insufficient_evidence": state.get("insufficient_evidence", False),
+                "insufficient_evidence_reason": state.get("insufficient_evidence_reason"),
             },
         )
         return state
@@ -144,5 +152,7 @@ def run_conversation_graph(
         answer=final_state["answer"],
         grading=final_state["grading"],
         rewrite=final_state["rewrite"],
+        insufficient_evidence=final_state.get("insufficient_evidence", False),
+        insufficient_evidence_reason=final_state.get("insufficient_evidence_reason"),
         history=final_state.get("history", []),
     )
