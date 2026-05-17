@@ -1,6 +1,6 @@
 # Story 1.6: 로컬 로그와 개발자 smoke command 만들기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,24 +16,24 @@ so that 웹 UI나 외부 AI provider credentials 없이도 workspace 상태를 �
 
 ## Tasks / Subtasks
 
-- [ ] Local logging module 추가 (AC: 2)
-  - [ ] `backend/app/core/logging.py` 생성
-  - [ ] settings 기반 log level 적용
-  - [ ] secret redaction helper 제공
-  - [ ] startup/config/tracing 상태를 raw secret 없이 기록 가능하게 함
-- [ ] 최소 smoke command 추가 (AC: 1, 2, 3)
-  - [ ] `backend/scripts/smoke.py` 생성
-  - [ ] FastAPI app import/health path 확인
-  - [ ] settings summary/logging/tracing disabled 상태 확인
-  - [ ] DB connectivity는 선택적으로 확인하고 실패를 명확히 표시
-  - [ ] LLM/embedding provider key 없이 성공 가능해야 함
-- [ ] 문서 업데이트 (AC: 3)
-  - [ ] backend README에 smoke command 절차 추가
-  - [ ] DB optional 여부와 no-provider-key 보장 명시
-- [ ] 테스트 추가/업데이트 (AC: 1, 2, 3)
-  - [ ] smoke command exit code 0 테스트
-  - [ ] smoke output/log가 non-sensitive 상태 정보를 포함하는지 테스트
-  - [ ] secret sentinel 값이 출력되지 않는지 테스트
+- [x] Local logging module 추가 (AC: 2)
+  - [x] `backend/app/core/logging.py` 생성
+  - [x] settings 기반 log level 적용
+  - [x] secret redaction helper 제공
+  - [x] startup/config/tracing 상태를 raw secret 없이 기록 가능하게 함
+- [x] 최소 smoke command 추가 (AC: 1, 2, 3)
+  - [x] `backend/scripts/smoke.py` 생성
+  - [x] FastAPI app import/health path 확인
+  - [x] settings summary/logging/tracing disabled 상태 확인
+  - [x] DB connectivity는 선택적으로 확인하고 실패를 명확히 표시
+  - [x] LLM/embedding provider key 없이 성공 가능해야 함
+- [x] 문서 업데이트 (AC: 3)
+  - [x] backend README에 smoke command 절차 추가
+  - [x] DB optional 여부와 no-provider-key 보장 명시
+- [x] 테스트 추가/업데이트 (AC: 1, 2, 3)
+  - [x] smoke command exit code 0 테스트
+  - [x] smoke output/log가 non-sensitive 상태 정보를 포함하는지 테스트
+  - [x] secret sentinel 값이 출력되지 않는지 테스트
 
 ## Dev Notes
 
@@ -61,6 +61,18 @@ TBD by dev agent
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 25 passed
+- `cd backend && python scripts/smoke.py` → Smoke check passed
+
 ### Completion Notes List
 
+- Added local logging helpers with secret redaction and safe settings summary.
+- Added minimal smoke command for FastAPI import, health endpoint, config/tracing state, and no-provider-key readiness.
+- Documented smoke command in backend README.
+
 ### File List
+
+- `backend/app/core/logging.py`
+- `backend/scripts/smoke.py`
+- `backend/README.md`
+- `backend/tests/test_story_1_6_smoke_logging.py`
