@@ -173,6 +173,8 @@ PSJ는 local-first 환경에서 FastAPI backend, PostgreSQL/pgvector, 설정, mi
 
 ### Story 1.1: 백엔드 프로젝트 기본 골격 만들기
 
+**GH Issue:** #1
+
 As a 개발자,
 I want FastAPI 기반 백엔드 프로젝트 구조를 만들고 싶다,
 So that 이후 RAG 기능을 안정적인 구조 위에서 구현할 수 있다.
@@ -194,6 +196,8 @@ So that 이후 RAG 기능을 안정적인 구조 위에서 구현할 수 있다.
 **Then** backend 환경 생성, 의존성 설치, local API 실행 방법을 확인할 수 있다.
 
 ### Story 1.2: 환경변수와 secret 관리 만들기
+
+**GH Issue:** #2
 
 As a 개발자,
 I want 애플리케이션 설정을 환경변수와 `.env` 파일에서 로드하고 싶다,
@@ -218,6 +222,8 @@ So that secret과 provider 설정을 코드에 하드코딩하지 않고 관리�
 
 ### Story 1.3: PostgreSQL + pgvector 로컬 DB 준비하기
 
+**GH Issue:** #3
+
 As a 개발자,
 I want Docker Compose로 PostgreSQL과 pgvector 로컬 데이터베이스를 실행하고 싶다,
 So that RAG metadata와 vector-ready storage를 일관된 local 환경에서 개발할 수 있다.
@@ -239,6 +245,8 @@ So that RAG metadata와 vector-ready storage를 일관된 local 환경에서 개
 **Then** local database를 중지, 제거, 재생성하는 방법을 명확히 알 수 있다.
 
 ### Story 1.4: SQLAlchemy와 Alembic migration 기반 만들기
+
+**GH Issue:** #4
 
 As a 개발자,
 I want SQLAlchemy와 Alembic을 local database에 맞게 설정하고 싶다,
@@ -263,6 +271,8 @@ So that future RAG entities를 controlled migration으로 추가할 수 있다.
 
 ### Story 1.5: Source inventory와 canonical schema 문서 초안 만들기
 
+**GH Issue:** #5
+
 As a 개발자/운영자,
 I want source inventory와 canonical document schema의 초기 문서 초안을 만들고 싶다,
 So that supported, unsupported, sample, official, user-provided data를 처음부터 구분해 추적할 수 있다.
@@ -284,6 +294,8 @@ So that supported, unsupported, sample, official, user-provided data를 처음�
 **Then** `sample`, `official`, `user_provided`, `unknown` 같은 data mode 개념이 포함되어 있다.
 
 ### Story 1.6: 로컬 로그와 개발자 smoke command 만들기
+
+**GH Issue:** #6
 
 As a 개발자,
 I want local logging과 최소 smoke command를 갖추고 싶다,
@@ -311,6 +323,8 @@ PSJ는 markdown/txt 문서를 공통 schema로 로딩하고, chunking, metadata,
 
 ### Story 2.1: Document와 Chunk 저장 모델 만들기
 
+**GH Issue:** #7
+
 As a 개발자,
 I want 문서와 chunk를 저장할 최소 DB 모델을 만들고 싶다,
 So that ingestion 결과를 source metadata와 함께 추적 가능한 형태로 저장할 수 있다.
@@ -333,6 +347,8 @@ So that ingestion 결과를 source metadata와 함께 추적 가능한 형태로
 **And** 원본 문서와의 추적 관계가 유지된다.
 
 ### Story 2.2: Markdown/TXT loader와 canonical document 변환 만들기
+
+**GH Issue:** #8
 
 As a 개발자,
 I want markdown/txt 파일을 로딩해 canonical document schema로 변환하고 싶다,
@@ -357,6 +373,8 @@ So that 이후 chunking, embedding, retrieval이 동일한 입력 형식을 사�
 
 ### Story 2.3: Chunking과 metadata enrichment 만들기
 
+**GH Issue:** #9
+
 As a 개발자,
 I want canonical document를 검색 가능한 chunk로 나누고 metadata를 보강하고 싶다,
 So that retrieval 결과가 원본 문서와 위치 정보를 추적할 수 있다.
@@ -379,6 +397,8 @@ So that retrieval 결과가 원본 문서와 위치 정보를 추적할 수 있�
 **And** 짧은 문서는 하나의 유효 chunk로 처리될 수 있다.
 
 ### Story 2.4: Embedding provider abstraction과 fallback 만들기
+
+**GH Issue:** #10
 
 As a 개발자,
 I want embedding 생성 로직을 provider abstraction 뒤에 두고 key가 없을 때 fallback을 제공하고 싶다,
@@ -403,6 +423,8 @@ So that local smoke test가 외부 provider credentials 때문에 막히지 않�
 
 ### Story 2.5: Ingestion service와 CLI smoke command 만들기
 
+**GH Issue:** #11
+
 As a 개발자,
 I want sample markdown/txt 파일을 ingestion하는 service와 CLI command를 갖추고 싶다,
 So that 웹 UI 없이 문서를 지식베이스에 적재하는 흐름을 검증할 수 있다.
@@ -425,6 +447,8 @@ So that 웹 UI 없이 문서를 지식베이스에 적재하는 흐름을 검증
 
 ### Story 2.6: Source inventory 상태와 ingestion 결과 연결하기
 
+**GH Issue:** #12
+
 As a 개발자/운영자,
 I want source inventory의 지원 상태와 ingestion 결과를 연결하고 싶다,
 So that 어떤 source가 지원, 미지원, 보류, 적재 완료 상태인지 추적할 수 있다.
@@ -446,6 +470,8 @@ So that 어떤 source가 지원, 미지원, 보류, 적재 완료 상태인지 �
 **Then** source별 처리 상태, document 수, chunk 수, 실패 사유를 확인할 수 있다.
 
 ### Story 2.7: 공식/공개 데이터 source 조사와 수집 방식 기록하기
+
+**GH Issue:** #13
 
 As a 개발자/운영자,
 I want 법령·고시 관련 공식/공개 데이터 source의 접근 방식과 제공 형식을 조사해 source inventory에 기록하고 싶다,
@@ -479,6 +505,8 @@ So that 실제 scraping 또는 API ingestion을 구현하기 전에 어떤 sourc
 
 ### Story 3.1: RAG smoke test용 sample knowledge fixture 만들기
 
+**GH Issue:** #14
+
 As a 개발자,
 I want RAG 검색/답변 검증용 sample 문서 fixture를 만들고 싶다,
 So that official data 없이도 RAG Core 동작을 안전하게 검증할 수 있다.
@@ -501,6 +529,8 @@ So that official data 없이도 RAG Core 동작을 안전하게 검증할 수 �
 **And** 공식 데이터가 없는 질문에 대해서는 no evidence 또는 insufficient evidence 기대값이 포함된다.
 
 ### Story 3.2: Vector retrieval 기본 검색 만들기
+
+**GH Issue:** #15
 
 As a 개발자,
 I want 저장된 chunk를 자연어 query로 검색할 수 있는 retriever를 만들고 싶다,
@@ -525,6 +555,8 @@ So that RAG 답변 생성 전에 관련 근거 chunk를 찾을 수 있다.
 
 ### Story 3.3: Citation과 source metadata 포함 검색 결과 만들기
 
+**GH Issue:** #16
+
 As a 개발자,
 I want 검색 결과에 citation과 source metadata를 포함하고 싶다,
 So that 답변이 어떤 문서와 chunk에 근거하는지 추적할 수 있다.
@@ -547,6 +579,8 @@ So that 답변이 어떤 문서와 chunk에 근거하는지 추적할 수 있다
 **And** official data처럼 보이지 않는다.
 
 ### Story 3.4: 근거 기반 answer composer 만들기
+
+**GH Issue:** #17
 
 As a 사용자,
 I want 검색된 근거 chunk를 바탕으로 답변을 받고 싶다,
@@ -576,6 +610,8 @@ So that 답변 내용과 근거를 함께 확인할 수 있다.
 
 ### Story 3.5: 단일 질문 RAG CLI smoke command 만들기
 
+**GH Issue:** #18
+
 As a 개발자,
 I want CLI에서 단일 자연어 질문을 실행해 RAG 결과를 확인하고 싶다,
 So that 웹 UI 없이 ingestion부터 retrieval, answer까지 end-to-end로 검증할 수 있다.
@@ -598,6 +634,8 @@ So that 웹 UI 없이 ingestion부터 retrieval, answer까지 end-to-end로 검�
 **And** secret 값은 출력되지 않는다.
 
 ### Story 3.6: `POST /chat` 또는 `/query` 기본 RAG API 만들기
+
+**GH Issue:** #19
 
 As a 개발자/API 사용자,
 I want 자연어 질문을 보내고 RAG 답변을 받을 수 있는 기본 API endpoint를 갖추고 싶다,
@@ -622,6 +660,8 @@ So that 이후 웹 UI와 CRAG runtime이 같은 응답 계약을 사용할 수 �
 
 ### Story 3.7: RAG response safety policy 적용하기
 
+**GH Issue:** #20
+
 As a 사용자,
 I want 시스템이 제공되지 않은 공식 법령 데이터나 업무 문서를 임의로 만들어 답하지 않기를 원한다,
 So that sample/local data 기반 답변과 공식 검토 결과를 혼동하지 않을 수 있다.
@@ -644,6 +684,8 @@ So that sample/local data 기반 답변과 공식 검토 결과를 혼동하지 
 **And** 없는 URL이나 source metadata는 만들어내지 않는다.
 
 ### Story 3.8: RAG API/CLI smoke test 자동화하기
+
+**GH Issue:** #21
 
 As a 개발자,
 I want RAG Core의 기본 흐름을 자동 smoke test로 검증하고 싶다,
@@ -672,6 +714,8 @@ So that 이후 CRAG와 웹 UI 구현 전에 regression을 줄일 수 있다.
 
 ### Story 4.1: Conversation과 Message 저장 모델 만들기
 
+**GH Issue:** #22
+
 As a 개발자,
 I want conversation과 message를 저장하는 최소 DB 모델을 만들고 싶다,
 So that 멀티턴 대화의 이전 질문과 답변 맥락을 추적할 수 있다.
@@ -694,6 +738,8 @@ So that 멀티턴 대화의 이전 질문과 답변 맥락을 추적할 수 있�
 **And** 이전 message history를 조회할 수 있다.
 
 ### Story 4.2: Retrieval trace 저장 모델 만들기
+
+**GH Issue:** #23
 
 As a 개발자,
 I want retrieval trace를 저장하는 모델을 만들고 싶다,
@@ -718,6 +764,8 @@ So that RAG/CRAG 실행 흐름과 근거 부족 원인을 디버깅할 수 있�
 
 ### Story 4.3: LangGraph conversation state 기본 흐름 만들기
 
+**GH Issue:** #24
+
 As a 개발자,
 I want LangGraph 기반 conversation state 흐름을 만들고 싶다,
 So that 멀티턴 질문에서 이전 대화 맥락을 사용할 수 있다.
@@ -740,6 +788,8 @@ So that 멀티턴 질문에서 이전 대화 맥락을 사용할 수 있다.
 **And** LangSmith가 없어도 local debugging이 가능하다.
 
 ### Story 4.4: Retrieval grading 만들기
+
+**GH Issue:** #25
 
 As a 사용자,
 I want 시스템이 검색 결과가 질문에 충분히 관련 있는지 평가하길 원한다,
@@ -764,6 +814,8 @@ So that 관련 없는 근거로 답변하지 않도록 할 수 있다.
 
 ### Story 4.5: Query rewrite와 re-retrieval 만들기
 
+**GH Issue:** #26
+
 As a 사용자,
 I want 검색 결과가 약할 때 시스템이 질문을 보정하고 다시 검색하길 원한다,
 So that 한 번의 검색 실패로 바로 포기하지 않을 수 있다.
@@ -786,6 +838,8 @@ So that 한 번의 검색 실패로 바로 포기하지 않을 수 있다.
 **And** fallback/skipped 상태가 응답 또는 로그에 명확히 표시된다.
 
 ### Story 4.6: Insufficient evidence 응답 경로 만들기
+
+**GH Issue:** #27
 
 As a 사용자,
 I want 근거가 부족할 때 시스템이 모른다고 말하길 원한다,
@@ -810,6 +864,8 @@ So that 없는 근거로 그럴듯한 답변을 받지 않는다.
 
 ### Story 4.7: Multi-turn chat API contract 확장하기
 
+**GH Issue:** #28
+
 As a 개발자/API 사용자,
 I want chat API가 conversation id와 retrieval trace summary를 포함하길 원한다,
 So that 웹 UI와 디버깅 도구가 멀티턴 상태와 CRAG 흐름을 사용할 수 있다.
@@ -832,6 +888,8 @@ So that 웹 UI와 디버깅 도구가 멀티턴 상태와 CRAG 흐름을 사용�
 **And** frontend가 상태 표시를 위해 사용할 수 있는 일관된 shape를 유지한다.
 
 ### Story 4.8: 3턴 대화 smoke test 만들기
+
+**GH Issue:** #29
 
 As a 개발자,
 I want 최소 3턴 이상의 멀티턴 CRAG smoke test를 만들고 싶다,
@@ -860,6 +918,8 @@ So that conversation state, retrieval grading, rewrite, insufficient evidence �
 
 ### Story 5.1: SvelteKit frontend 초기화와 기본 레이아웃 만들기
 
+**GH Issue:** #30
+
 As a 사용자,
 I want 웹 브라우저에서 챗봇 화면에 접근하고 싶다,
 So that CLI/API 없이 RAG 챗봇을 사용할 수 있다.
@@ -882,6 +942,8 @@ So that CLI/API 없이 RAG 챗봇을 사용할 수 있다.
 **And** backend API 호출을 위한 단순한 구조를 가진다.
 
 ### Story 5.2: Chat input과 message list 만들기
+
+**GH Issue:** #31
 
 As a 사용자,
 I want 자연어 질문을 입력하고 대화 메시지를 볼 수 있다,
@@ -906,6 +968,8 @@ So that 버튼 중심 workflow 없이 챗봇과 대화할 수 있다.
 
 ### Story 5.3: Backend chat API 연결하기
 
+**GH Issue:** #32
+
 As a 사용자,
 I want 웹 화면에서 질문을 보내고 backend RAG/CRAG 답변을 받고 싶다,
 So that 검증된 RAG Core를 브라우저에서 사용할 수 있다.
@@ -928,6 +992,8 @@ So that 검증된 RAG Core를 브라우저에서 사용할 수 있다.
 **And** 오류가 message list를 조용히 깨뜨리지 않는다.
 
 ### Story 5.4: Citation과 source panel 표시하기
+
+**GH Issue:** #33
 
 As a 사용자,
 I want 답변의 출처와 근거 chunk를 확인하고 싶다,
@@ -952,6 +1018,8 @@ So that 답변이 어떤 문서에 기반했는지 판단할 수 있다.
 
 ### Story 5.5: Data mode와 safety 상태 표시하기
 
+**GH Issue:** #34
+
 As a 사용자,
 I want 답변이 sample, official, user_provided 중 어떤 데이터에 기반했는지 보고 싶다,
 So that 샘플 답변과 공식 검토 결과를 혼동하지 않을 수 있다.
@@ -975,6 +1043,8 @@ So that 샘플 답변과 공식 검토 결과를 혼동하지 않을 수 있다.
 
 ### Story 5.6: Loading, error, insufficient evidence 상태 표시하기
 
+**GH Issue:** #35
+
 As a 사용자,
 I want 질문 처리 중, 오류, 근거 부족 상태를 명확히 알고 싶다,
 So that 시스템이 멈췄는지, 실패했는지, 근거가 부족한지 구분할 수 있다.
@@ -997,6 +1067,8 @@ So that 시스템이 멈췄는지, 실패했는지, 근거가 부족한지 구�
 **And** 필요하면 다시 시도할 수 있는 상태로 유지한다.
 
 ### Story 5.7: 3턴 웹 채팅 smoke test 만들기
+
+**GH Issue:** #36
 
 As a 개발자,
 I want 웹 UI에서 최소 3턴 대화를 검증하고 싶다,
@@ -1025,6 +1097,8 @@ So that backend CRAG conversation runtime이 frontend와 연결되어 동작하�
 
 ### Story 6.1: 법령·고시 domain metadata schema 확장 설계하기
 
+**GH Issue:** #37
+
 As a 개발자,
 I want 법령·고시 데이터에 필요한 domain metadata schema를 설계하고 싶다,
 So that 향후 official source ingestion 시 개정일, 시행일, 조항, 출처를 구조적으로 저장할 수 있다.
@@ -1047,6 +1121,8 @@ So that 향후 official source ingestion 시 개정일, 시행일, 조항, 출�
 **And** 시스템이 누락된 공식 metadata를 임의 생성하지 않는다.
 
 ### Story 6.2: 공식 source 후보 우선순위와 지원 상태 확정하기
+
+**GH Issue:** #38
 
 As a 개발자/운영자,
 I want 공식/공개 법령·고시 source 후보의 우선순위와 지원 상태를 확정하고 싶다,
@@ -1071,6 +1147,8 @@ So that 어떤 source부터 ingestion 구현할지 결정할 수 있다.
 
 ### Story 6.3: 첫 official source loader/parser 구현하기
 
+**GH Issue:** #39
+
 As a 개발자,
 I want 우선순위가 높은 official source 하나에 대한 loader/parser를 구현하고 싶다,
 So that 실제 공식/공개 데이터를 canonical document schema로 변환할 수 있다.
@@ -1093,6 +1171,8 @@ So that 실제 공식/공개 데이터를 canonical document schema로 변환할
 **And** 개정일, 시행일, 조항, 출처 URL을 임의 생성하지 않는다.
 
 ### Story 6.4: Official data ingestion smoke test 만들기
+
+**GH Issue:** #40
 
 As a 개발자,
 I want 첫 official source ingestion smoke test를 만들고 싶다,
@@ -1117,6 +1197,8 @@ So that 공식/공개 데이터가 sample data와 구분되어 저장되는지 �
 
 ### Story 6.5: 최근 X기간 필터 설계와 검색 조건 연결하기
 
+**GH Issue:** #41
+
 As a 사용자,
 I want 최근 X기간 안에 변경된 자료를 기준으로 질문하고 싶다,
 So that 오래된 자료와 최근 변경사항을 구분해 검토할 수 있다.
@@ -1140,6 +1222,8 @@ So that 오래된 자료와 최근 변경사항을 구분해 검토할 수 있�
 
 ### Story 6.6: 알림 레벨을 작업 우선순위로 정의하기
 
+**GH Issue:** #42
+
 As a 사용자,
 I want 변경사항의 알림 레벨을 법적 판단이 아니라 작업 우선순위로 보고 싶다,
 So that 시스템 답변을 위법/적법 판단으로 오해하지 않을 수 있다.
@@ -1162,6 +1246,8 @@ So that 시스템 답변을 위법/적법 판단으로 오해하지 않을 수 �
 **And** 전문적/법률적 최종 판단은 사용자 책임임을 유지한다.
 
 ### Story 6.7: Domain safety policy와 response copy 정리하기
+
+**GH Issue:** #43
 
 As a 사용자,
 I want 법령·감정평가 관련 답변이 참고용 검토 보조임을 명확히 알 수 있다,
