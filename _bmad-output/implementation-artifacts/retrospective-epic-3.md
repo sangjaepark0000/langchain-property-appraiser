@@ -15,6 +15,7 @@ Epic 3 delivered a local-first RAG core from sample fixtures through retrieval, 
 - `POST /query` RAG API response contract.
 - Deterministic response safety policy.
 - Automated API/CLI RAG smoke test script.
+- pgvector-backed `chunks.embedding vector(16)` storage with metadata fallback retained.
 
 ## Validation Summary
 
@@ -32,9 +33,10 @@ Final local validation after Story 3.8:
 
 ## Risks / Follow-ups
 
-- Retrieval uses metadata-stored vectors and Python cosine similarity; pgvector/native indexed retrieval remains a future optimization.
+- Retrieval now has a PostgreSQL/pgvector storage/search path, while sqlite/local smoke still uses Python cosine fallback.
 - Answer composer is extractive fallback, not a full LLM provider integration.
 - API currently exposes basic `/query`; multi-turn conversation context is not implemented yet.
+- Embedding dimension is currently `16` for local fake embeddings; real provider integration may require a dimension migration or provider-specific vector columns.
 - Official source ingestion remains deferred, so official/legal answers must remain guarded.
 
 ## Recommended Next Steps
