@@ -1,6 +1,6 @@
 # Story 4.7: Multi-turn chat API contract 확장하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,11 +16,11 @@ so that 웹 UI와 디버깅 도구가 멀티턴 상태와 CRAG 흐름을 사용�
 
 ## Tasks / Subtasks
 
-- [ ] chat request/response schema 추가
-- [ ] /chat route 추가
-- [ ] conversation graph 호출 연결
-- [ ] message_id/trace summary 반환
-- [ ] tests 추가
+- [x] chat request/response schema 추가
+- [x] /chat route 추가
+- [x] conversation graph 호출 연결
+- [x] message_id/trace summary 반환
+- [x] tests 추가
 
 ## Dev Notes
 
@@ -34,6 +34,16 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 118 passed
+
 ### Completion Notes List
 
+- Added POST /chat multi-turn API contract.
+- New chat requests return conversation_id, user message_id, answer, citations, data_mode, insufficient evidence fields, and retrieval trace summary.
+- Follow-up requests append to existing conversation.
+
 ### File List
+
+- `backend/app/schemas/chat.py`
+- `backend/app/api/routes.py`
+- `backend/tests/test_story_4_7_chat_api.py`
