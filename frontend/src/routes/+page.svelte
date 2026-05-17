@@ -25,7 +25,16 @@
       const response = await sendChatMessage({ question, conversation_id: conversationId });
       conversationId = response.conversation_id;
       // Base assistant append shape: messages = [...messages, { role: 'assistant', content: response.answer }]
-      messages = [...messages, { role: 'assistant', content: response.answer, citations: response.citations as CitationForMessage[] }];
+      messages = [
+        ...messages,
+        {
+          role: 'assistant',
+          content: response.answer,
+          citations: response.citations as CitationForMessage[],
+          dataMode: response.data_mode,
+          insufficientEvidenceReason: response.insufficient_evidence_reason
+        }
+      ];
       status = response.insufficient_evidence
         ? `Insufficient evidence: ${response.insufficient_evidence_reason ?? 'reason unavailable'}`
         : `Answered from ${response.data_mode} data`;
