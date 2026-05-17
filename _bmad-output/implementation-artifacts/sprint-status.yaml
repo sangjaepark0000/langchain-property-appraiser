@@ -69,7 +69,7 @@ development_status:
   3-6-post-chat-또는-query-기본-rag-api-만들기: done
   3-7-rag-response-safety-policy-적용하기: done
   3-8-rag-api-cli-smoke-test-자동화하기: done
-  3-9-pgvector-backed-chunk-embedding-저장과-검색-만들기: atdd-done
+  3-9-pgvector-backed-chunk-embedding-저장과-검색-만들기: review
   epic-3-retrospective: done
 
   epic-4: backlog
