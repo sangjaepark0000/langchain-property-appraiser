@@ -131,7 +131,7 @@ python scripts/ingest_file.py ../sample_data/sample-property-notes.md
 python scripts/list_ingested.py
 ```
 
-Unsupported files are reported in `unsupported_files` and are not counted as successful ingestion.
+Unsupported files are reported in `unsupported_files` and are not counted as successful ingestion. The CLI also prints one source-level summary line per file with `status`, `documents`, `chunks`, and failure reason when present.
 
 ## Smoke Check
 

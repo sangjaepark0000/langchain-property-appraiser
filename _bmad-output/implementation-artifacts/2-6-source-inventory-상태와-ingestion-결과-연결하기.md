@@ -1,6 +1,6 @@
 # Story 2.6: Source inventory 상태와 ingestion 결과 연결하기
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -16,10 +16,10 @@ so that 어떤 source가 지원, 미지원, 보류, 적재 완료 상태인지 �
 
 ## Tasks / Subtasks
 
-- [ ] SourceInventoryEntry/SourceStatus 모델 추가
-- [ ] ingestion 결과와 source status 연결
-- [ ] source별 summary 출력
-- [ ] unsupported/failed 상태 테스트
+- [x] SourceInventoryEntry/SourceStatus 모델 추가
+- [x] ingestion 결과와 source status 연결
+- [x] source별 summary 출력
+- [x] unsupported/failed 상태 테스트
 
 ## Dev Notes
 
@@ -33,6 +33,17 @@ TBD
 
 ### Debug Log References
 
+- `cd backend && .venv/bin/pytest` → 51 passed
+
 ### Completion Notes List
 
+- Added source inventory status dataclass and source-level summaries.
+- Ingestion now marks ingested, unsupported, and failed sources explicitly.
+- CLI prints per-source status, document count, chunk count, and failure reason.
+
 ### File List
+
+- `backend/app/services/ingest_service.py`
+- `backend/scripts/ingest_file.py`
+- `backend/README.md`
+- `backend/tests/test_story_2_6_source_inventory.py`

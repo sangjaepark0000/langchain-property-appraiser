@@ -34,6 +34,14 @@ def main() -> int:
         print("unsupported_files=" + ",".join(result.unsupported_files))
     if result.failed_files:
         print("failed_files=" + ",".join(result.failed_files))
+    for summary in result.source_summaries.values():
+        line = (
+            f"source={summary.source_path} status={summary.status} "
+            f"documents={summary.document_count} chunks={summary.chunk_count}"
+        )
+        if summary.failure_reason:
+            line += f" reason={summary.failure_reason}"
+        print(line)
     return 0 if result.items else 1
 
 
