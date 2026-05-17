@@ -24,7 +24,14 @@ export async function sendChatMessage(request: ChatRequest): Promise<ChatRespons
   });
 
   if (!response.ok) {
-    throw new Error(`Chat request failed: ${response.status}`);
+    let detail = `status ${response.status}`;
+    try {
+      const payload = await response.json();
+      detail = typeof payload.detail === 'string' ? payload.detail : detail;
+    } catch {
+      // Keep the status-based detail when the backend returns no JSON body.
+    }
+    throw new Error(`Chat request failed: ${detail}`);
   }
 
   return response.json();
