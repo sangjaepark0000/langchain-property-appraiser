@@ -6,6 +6,14 @@ from typing import Any, Protocol
 from app.core.config import Settings, get_settings
 from app.rag.safety import apply_response_safety_policy
 
+try:  # pragma: no cover - import guard for environments without langsmith extras
+    from langsmith import traceable
+except Exception:  # pragma: no cover
+    def traceable(*args, **kwargs):  # type: ignore[no-redef]
+        def decorator(func):
+            return func
+        return decorator
+
 
 @dataclass(frozen=True)
 class AnswerProviderResult:
@@ -62,6 +70,7 @@ class OpenAIAnswerProvider:
             raise RuntimeError("langchain-openai package is required for LLM_PROVIDER=openai") from exc
         self.client = ChatOpenAI(model=model, api_key=api_key, temperature=0)
 
+    @traceable(name="generate_openai_grounded_answer", run_type="llm")
     def generate(self, question: str, evidence: list[dict]) -> AnswerProviderResult:
         prompt = _build_grounded_answer_prompt(question, evidence)
         messages = [
@@ -73,7 +82,7 @@ class OpenAIAnswerProvider:
             ),
             ("user", prompt),
         ]
-        response = self.client.invoke(messages)
+        response = self.client.invoke(messages, config={"run_name": "appraisal_law_answer"})
         answer = getattr(response, "content", None) or "근거 기반 답변을 생성하지 못했습니다."
         if isinstance(answer, list):
             answer = "".join(str(part) for part in answer)

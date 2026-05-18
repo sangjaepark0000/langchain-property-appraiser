@@ -82,8 +82,9 @@ def test_openai_answer_provider_builds_grounded_prompt_without_live_api():
         def __init__(self) -> None:
             self.messages = None
 
-        def invoke(self, messages):
+        def invoke(self, messages, config=None):
             self.messages = messages
+            self.config = config
             return FakeResponse()
 
     client = FakeClient()
@@ -105,6 +106,7 @@ def test_openai_answer_provider_builds_grounded_prompt_without_live_api():
 
     assert result.provider == "langchain-openai:gpt-test"
     assert result.fallback is False
+    assert client.config == {"run_name": "appraisal_law_answer"}
     assert client.messages[0][0] == "system"
     assert client.messages[1][0] == "user"
     assert "제공된 근거만" in client.messages[1][1]

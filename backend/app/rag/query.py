@@ -12,6 +12,14 @@ from app.rag.retriever import VectorRetriever
 from app.rag.rewrite import QueryRewriteResult, rewrite_query
 from app.services.retrieval_trace_service import create_retrieval_trace
 
+try:  # pragma: no cover - import guard for environments without langsmith extras
+    from langsmith import traceable
+except Exception:  # pragma: no cover
+    def traceable(*args, **kwargs):  # type: ignore[no-redef]
+        def decorator(func):
+            return func
+        return decorator
+
 
 @dataclass(frozen=True)
 class RAGQueryResult:
@@ -49,6 +57,7 @@ def _smalltalk_answer(question: str) -> AnswerResult:
     )
 
 
+@traceable(name="RAG Answer Question", run_type="chain")
 def answer_question(
     session: Session,
     question: str,

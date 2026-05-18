@@ -72,14 +72,14 @@ class Settings(BaseSettings):
 
 def configure_langsmith_environment(settings: Settings) -> None:
     if settings.langsmith_tracing:
-        os.environ.setdefault("LANGSMITH_TRACING", "true")
-        os.environ.setdefault("LANGCHAIN_TRACING_V2", "true")
+        os.environ["LANGSMITH_TRACING"] = "true"
+        os.environ["LANGCHAIN_TRACING_V2"] = "true"
     if settings.langsmith_api_key:
-        os.environ.setdefault("LANGSMITH_API_KEY", settings.langsmith_api_key)
-        os.environ.setdefault("LANGCHAIN_API_KEY", settings.langsmith_api_key)
+        os.environ["LANGSMITH_API_KEY"] = settings.langsmith_api_key
+        os.environ["LANGCHAIN_API_KEY"] = settings.langsmith_api_key
     if settings.langsmith_project:
-        os.environ.setdefault("LANGSMITH_PROJECT", settings.langsmith_project)
-        os.environ.setdefault("LANGCHAIN_PROJECT", settings.langsmith_project)
+        os.environ["LANGSMITH_PROJECT"] = settings.langsmith_project
+        os.environ["LANGCHAIN_PROJECT"] = settings.langsmith_project
 
 
 @lru_cache

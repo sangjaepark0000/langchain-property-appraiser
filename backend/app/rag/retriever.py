@@ -12,6 +12,14 @@ from app.models.chunk import Chunk
 from app.models.document import Document  # noqa: F401 - ensure relationship registration
 from app.rag.embeddings import EmbeddingProvider, get_embedding_provider
 
+try:  # pragma: no cover - import guard for environments without langsmith extras
+    from langsmith import traceable
+except Exception:  # pragma: no cover
+    def traceable(*args, **kwargs):  # type: ignore[no-redef]
+        def decorator(func):
+            return func
+        return decorator
+
 if TYPE_CHECKING:
     from app.rag.recent_filter import RecentPeriodFilter
 
@@ -49,6 +57,7 @@ class VectorRetriever:
         self.session = session
         self.embedding_provider = embedding_provider or get_embedding_provider()
 
+    @traceable(name="Retrieve Context", run_type="retriever")
     def search(
         self,
         query: str,

@@ -23,7 +23,7 @@ def test_message_list_renders_data_mode_and_safety_notice_for_assistant_messages
     assert "message.dataMode" in component
     assert "message.insufficientEvidenceReason" in component
     assert "<DataModeNotice" in component
-    assert "message.dataMode || message.insufficientEvidenceReason" in component
+    assert "message.dataMode !== 'none'" in component
     assert "참고용 답변" in component
 
 
