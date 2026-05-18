@@ -26,7 +26,7 @@ class Chunk(Base):
     text: Mapped[str] = mapped_column(Text, nullable=False)
     metadata_: Mapped[dict] = mapped_column("metadata", JSON().with_variant(JSONB, "postgresql"), nullable=False, default=dict)
     source_lineage: Mapped[dict] = mapped_column(JSON().with_variant(JSONB, "postgresql"), nullable=False, default=dict)
-    embedding: Mapped[list[float] | None] = mapped_column(EmbeddingVector(16), nullable=True)
+    embedding: Mapped[list[float] | None] = mapped_column(EmbeddingVector(1536), nullable=True)
     char_start: Mapped[int | None] = mapped_column(Integer, nullable=True)
     char_end: Mapped[int | None] = mapped_column(Integer, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)

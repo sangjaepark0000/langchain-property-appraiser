@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import logging
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Any, Protocol
 
 from app.core.config import Settings, get_settings
 
@@ -42,6 +42,35 @@ class FakeEmbeddingProvider:
         return EmbeddingResult(provider=self.name, vector=values, status="success", fallback=self.fallback)
 
 
+class OpenAIEmbeddingProvider:
+    name = "openai"
+
+    def __init__(self, *, api_key: str, model: str, dimensions: int, client: Any | None = None) -> None:
+        self.model = model
+        self.dimensions = dimensions
+        if client is not None:
+            self.client = client
+            return
+        try:
+            from openai import OpenAI
+        except ImportError as exc:  # pragma: no cover - dependency packaging guard
+            raise RuntimeError("openai package is required for EMBEDDING_PROVIDER=openai") from exc
+        self.client = OpenAI(api_key=api_key)
+
+    def embed_text(self, text: str) -> EmbeddingResult:
+        kwargs: dict[str, Any] = {"model": self.model, "input": text}
+        if self.dimensions > 0:
+            kwargs["dimensions"] = self.dimensions
+        response = self.client.embeddings.create(**kwargs)
+        vector = [float(value) for value in response.data[0].embedding]
+        return EmbeddingResult(
+            provider=f"openai:{self.model}",
+            vector=vector,
+            status="success",
+            fallback=False,
+        )
+
+
 class MissingProviderEmbeddingProvider:
     name = "missing-provider"
 
@@ -61,10 +90,16 @@ def get_embedding_provider(settings: Settings | None = None) -> EmbeddingProvide
     resolved = settings or get_settings()
     provider_name = resolved.embedding_provider.lower()
     if provider_name in {"none", "fake", "mock", "local"}:
-        return FakeEmbeddingProvider(fallback=provider_name != "fake")
+        return FakeEmbeddingProvider(dimensions=resolved.embedding_dimensions, fallback=provider_name != "fake")
+    if provider_name == "openai" and resolved.embedding_api_key:
+        return OpenAIEmbeddingProvider(
+            api_key=resolved.embedding_api_key,
+            model=resolved.embedding_model,
+            dimensions=resolved.embedding_dimensions,
+        )
     if not resolved.embedding_api_key:
         logger.info("Embedding provider %s requested without key; using deterministic fake fallback", provider_name)
-        return FakeEmbeddingProvider(fallback=True)
+        return FakeEmbeddingProvider(dimensions=resolved.embedding_dimensions, fallback=True)
     return MissingProviderEmbeddingProvider(provider_name)
 
 

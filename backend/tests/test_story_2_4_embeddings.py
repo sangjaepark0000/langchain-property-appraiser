@@ -24,6 +24,62 @@ def test_embedding_factory_uses_fake_fallback_without_key(monkeypatch):
     assert result.fallback is True
 
 
+def test_openai_embedding_provider_uses_configured_model_dimensions_without_live_api():
+    from app.rag.embeddings import OpenAIEmbeddingProvider
+
+    class FakeEmbeddings:
+        def __init__(self) -> None:
+            self.kwargs = None
+
+        def create(self, **kwargs):
+            self.kwargs = kwargs
+
+            class Item:
+                embedding = [0.1, 0.2, 0.3]
+
+            class Response:
+                data = [Item()]
+
+            return Response()
+
+    class FakeClient:
+        def __init__(self) -> None:
+            self.embeddings = FakeEmbeddings()
+
+    client = FakeClient()
+    provider = OpenAIEmbeddingProvider(api_key="test-key", model="text-embedding-3-small", dimensions=1536, client=client)
+
+    result = provider.embed_text("hello")
+
+    assert result.provider == "openai:text-embedding-3-small"
+    assert result.vector == [0.1, 0.2, 0.3]
+    assert result.status == "success"
+    assert result.fallback is False
+    assert client.embeddings.kwargs == {
+        "model": "text-embedding-3-small",
+        "input": "hello",
+        "dimensions": 1536,
+    }
+
+
+def test_embedding_factory_uses_openai_when_key_is_configured():
+    from app.core.config import Settings
+    from app.rag.embeddings import OpenAIEmbeddingProvider, get_embedding_provider
+
+    provider = get_embedding_provider(
+        Settings(
+            EMBEDDING_PROVIDER="openai",
+            EMBEDDING_API_KEY="test-key",
+            EMBEDDING_MODEL="text-embedding-3-small",
+            EMBEDDING_DIMENSIONS=1536,
+        )
+    )
+
+    assert isinstance(provider, OpenAIEmbeddingProvider)
+    assert provider.model == "text-embedding-3-small"
+    assert provider.dimensions == 1536
+
+
 def test_embedding_failure_result_captures_reason():
     from app.rag.embeddings import EmbeddingResult
 

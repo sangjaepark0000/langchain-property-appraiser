@@ -16,6 +16,8 @@ def test_settings_load_with_minimal_environment(monkeypatch):
         "LLM_PROVIDER",
         "LLM_API_KEY",
         "EMBEDDING_PROVIDER",
+        "EMBEDDING_MODEL",
+        "EMBEDDING_DIMENSIONS",
         "EMBEDDING_API_KEY",
         "LANGSMITH_TRACING",
         "LANGSMITH_API_KEY",
@@ -31,6 +33,8 @@ def test_settings_load_with_minimal_environment(monkeypatch):
     assert settings.langsmith_tracing_enabled is False
     assert settings.has_llm_api_key is False
     assert settings.has_embedding_api_key is False
+    assert settings.embedding_model == "text-embedding-3-small"
+    assert settings.embedding_dimensions == 1536
 
 
 def test_settings_support_environment_overrides(monkeypatch):
@@ -87,6 +91,8 @@ def test_env_example_documents_required_settings_without_real_secrets():
         "LLM_PROVIDER=",
         "LLM_API_KEY=",
         "EMBEDDING_PROVIDER=",
+        "EMBEDDING_MODEL=",
+        "EMBEDDING_DIMENSIONS=",
         "EMBEDDING_API_KEY=",
         "LANGSMITH_TRACING=",
         "LANGSMITH_API_KEY=",

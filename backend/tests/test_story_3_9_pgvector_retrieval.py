@@ -10,6 +10,7 @@ from app.models.document import Document
 
 ROOT = Path(__file__).resolve().parents[2]
 MIGRATION = ROOT / "backend" / "alembic" / "versions" / "20260517_0003_chunk_embedding_pgvector.py"
+RESIZE_MIGRATION = ROOT / "backend" / "alembic" / "versions" / "20260518_0007_chunk_embedding_1536_dimensions.py"
 
 
 def make_session():
@@ -59,7 +60,7 @@ def test_ingestion_persists_embedding_to_metadata_and_vector_column(tmp_path):
 
     chunk = session.query(Chunk).one()
     assert chunk.embedding == chunk.metadata_["embedding"]
-    assert len(chunk.embedding) == 16
+    assert len(chunk.embedding) == 1536
     session.close()
 
 
@@ -106,7 +107,16 @@ def test_pgvector_migration_declares_extension_column_and_index():
     assert "vector_cosine_ops" in text
 
 
-def test_embedding_dimension_setting_defaults_to_fake_provider_size():
+def test_pgvector_resize_migration_updates_embedding_dimension_for_openai_small():
+    text = RESIZE_MIGRATION.read_text(encoding="utf-8")
+
+    assert "DROP COLUMN IF EXISTS embedding" in text
+    assert "embedding vector(1536)" in text
+    assert "embedding vector(16)" in text
+    assert "ix_chunks_embedding_hnsw" in text
+
+
+def test_embedding_dimension_setting_defaults_to_openai_small_size():
     from app.core.config import Settings
 
-    assert Settings().embedding_dimensions == 16
+    assert Settings().embedding_dimensions == 1536
