@@ -36,6 +36,15 @@ def test_downloaded_enforcement_rule_chunks_by_article_and_detects_deleted_artic
     assert "제27조 삭제" in deleted[0].text
 
 
+def test_downloaded_official_chunks_are_small_enough_for_openai_embedding_context():
+    for source_dir in NORMALIZED.iterdir():
+        if not source_dir.is_dir() or not (source_dir / "extracted.txt").exists():
+            continue
+        chunks = chunk_document(load_normalized_official_source(source_dir))
+        assert chunks
+        assert max(len(chunk.text) for chunk in chunks) <= 6250
+
+
 def test_ingest_official_sources_script_loads_four_official_documents_without_live_api(tmp_path):
     db_path = tmp_path / "official-downloaded.db"
     result = subprocess.run(

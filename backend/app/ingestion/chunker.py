@@ -86,6 +86,8 @@ _BOUNDARY_RE = re.compile(r"(?m)^(제\d+조(?:의\d+)?(?:\([^\n)]*\)|\s+삭제)|
 _ARTICLE_RE = re.compile(r"^(제\d+조(?:의\d+)?)(?:\(([^\n)]*)\))?")
 _DELETED_RE = re.compile(r"^(제\d+조(?:의\d+)?)\s+삭제\s*<([^>]+)>")
 _REVISION_RE = re.compile(r"<개정\s*([^>]+)>")
+_OFFICIAL_MAX_CHARS = 6000
+_OFFICIAL_OVERLAP_CHARS = 250
 
 
 def _chunk_official_law_text(document: CanonicalDocument) -> list[CanonicalChunk]:
@@ -101,40 +103,76 @@ def _chunk_official_law_text(document: CanonicalDocument) -> list[CanonicalChunk
         chunk_text = text[start:end].strip()
         if not chunk_text:
             continue
-        chunk_index = len(chunks)
-        chunk_metadata = _official_chunk_metadata(document, chunk_text, chunk_index, start, end)
-        lineage = {
-            "source_id": document.source_id,
-            "source_path": document.source_path,
-            "document_source_id": document.source_id,
-            "chunk_index": chunk_index,
-            "char_start": start,
-            "char_end": end,
-            "article_number": chunk_metadata.get("article_number"),
-            "chunk_type": chunk_metadata.get("chunk_type"),
-        }
-        citation = {
-            "source_name": document.source_name,
-            "source_path": document.source_path,
-            "source_url": document.source_url,
-            "data_mode": document.data_mode,
-            "chunk_index": chunk_index,
-            "article_number": chunk_metadata.get("article_number"),
-            "article_title": chunk_metadata.get("article_title"),
-        }
-        chunks.append(
-            CanonicalChunk(
-                document_source_id=document.source_id,
-                chunk_index=chunk_index,
-                text=chunk_text,
-                metadata=chunk_metadata,
-                lineage=lineage,
-                citation=citation,
-                char_start=start,
-                char_end=end,
+        segments = _split_long_official_chunk(chunk_text, max_chars=_OFFICIAL_MAX_CHARS, overlap_chars=_OFFICIAL_OVERLAP_CHARS)
+        for part_index, segment in enumerate(segments):
+            segment_offset = chunk_text.find(segment[: min(len(segment), 80)])
+            segment_start = start + max(segment_offset, 0)
+            segment_end = segment_start + len(segment)
+            chunk_index = len(chunks)
+            chunk_metadata = _official_chunk_metadata(document, segment, chunk_index, segment_start, segment_end)
+            if len(segments) > 1:
+                chunk_metadata["chunk_part_index"] = part_index
+                chunk_metadata["chunk_part_count"] = len(segments)
+            lineage = {
+                "source_id": document.source_id,
+                "source_path": document.source_path,
+                "document_source_id": document.source_id,
+                "chunk_index": chunk_index,
+                "char_start": segment_start,
+                "char_end": segment_end,
+                "article_number": chunk_metadata.get("article_number"),
+                "chunk_type": chunk_metadata.get("chunk_type"),
+                "chunk_part_index": chunk_metadata.get("chunk_part_index"),
+                "chunk_part_count": chunk_metadata.get("chunk_part_count"),
+            }
+            citation = {
+                "source_name": document.source_name,
+                "source_path": document.source_path,
+                "source_url": document.source_url,
+                "data_mode": document.data_mode,
+                "chunk_index": chunk_index,
+                "article_number": chunk_metadata.get("article_number"),
+                "article_title": chunk_metadata.get("article_title"),
+            }
+            chunks.append(
+                CanonicalChunk(
+                    document_source_id=document.source_id,
+                    chunk_index=chunk_index,
+                    text=segment,
+                    metadata=chunk_metadata,
+                    lineage=lineage,
+                    citation=citation,
+                    char_start=segment_start,
+                    char_end=segment_end,
+                )
             )
-        )
     return chunks
+
+
+def _split_long_official_chunk(chunk_text: str, *, max_chars: int, overlap_chars: int) -> list[str]:
+    if len(chunk_text) <= max_chars:
+        return [chunk_text]
+    first_line, _, body = chunk_text.partition("\n")
+    prefix = first_line.strip()
+    source = body.strip() if body.strip() else chunk_text
+    segments: list[str] = []
+    start = 0
+    step = max_chars - overlap_chars
+    while start < len(source):
+        end = min(start + max_chars, len(source))
+        if end < len(source):
+            boundary = max(source.rfind("\n", start, end), source.rfind(". ", start, end), source.rfind("다.", start, end))
+            if boundary > start + max_chars // 2:
+                end = boundary + 1
+        piece = source[start:end].strip()
+        if piece:
+            if prefix and not piece.startswith(prefix):
+                piece = f"{prefix}\n{piece}"
+            segments.append(piece)
+        if end >= len(source):
+            break
+        start = max(end - overlap_chars, start + 1)
+    return segments
 
 
 def _official_chunk_metadata(
