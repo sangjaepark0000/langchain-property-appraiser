@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import re
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -68,6 +69,7 @@ class VectorRetriever:
 
         if self.session.bind is not None and self.session.bind.dialect.name == "postgresql":
             pgvector_results = self._search_pgvector(resolved_query_vector, limit=limit, min_score=min_score)
+            pgvector_results = self._merge_lexical_article_results(query, pgvector_results, limit=limit, min_score=min_score)
             if pgvector_results:
                 if recent_filter is not None:
                     from app.rag.recent_filter import apply_recent_period_filter
@@ -97,12 +99,48 @@ class VectorRetriever:
                 )
             )
         candidates.sort(key=lambda result: result.score, reverse=True)
+        candidates = self._merge_lexical_article_results(query, candidates, limit=limit, min_score=min_score)
         limited = candidates[:limit]
         if recent_filter is not None:
             from app.rag.recent_filter import apply_recent_period_filter
 
             return apply_recent_period_filter(self.session, limited, recent_filter).results
         return limited
+
+    def _merge_lexical_article_results(
+        self, query: str, results: list[RetrievalResult], *, limit: int, min_score: float
+    ) -> list[RetrievalResult]:
+        article_numbers = set(re.findall(r"제\s*(\d+)\s*조(?:의\s*(\d+))?", query))
+        normalized_articles = {
+            f"제{number}조" + (f"의{sub}" if sub else "") for number, sub in article_numbers
+        }
+        if not normalized_articles:
+            return results
+        result_by_id = {result.chunk_id: result for result in results}
+        lexical_results: list[RetrievalResult] = []
+        law_hint = _law_hint(query)
+        chunks = self.session.query(Chunk).all()
+        for chunk in chunks:
+            if (chunk.metadata_ or {}).get("article_number") not in normalized_articles:
+                continue
+            document_name = chunk.document.source_name if chunk.document is not None else ""
+            score = 1.1 if law_hint and law_hint in document_name else 1.01
+            if score < min_score:
+                continue
+            lexical_result = RetrievalResult(
+                chunk_id=chunk.id,
+                document_id=chunk.document_id,
+                text=chunk.text,
+                score=score,
+                relevance=relevance_label(score),
+            )
+            if chunk.id in result_by_id:
+                result_by_id[chunk.id] = lexical_result
+            else:
+                lexical_results.append(lexical_result)
+        merged = [*lexical_results, *result_by_id.values()]
+        merged.sort(key=lambda result: result.score, reverse=True)
+        return merged[:limit]
 
     def _search_pgvector(self, query_vector: list[float], *, limit: int, min_score: float) -> list[RetrievalResult]:
         vector_literal = "[" + ",".join(str(float(value)) for value in query_vector) + "]"
@@ -133,3 +171,15 @@ class VectorRetriever:
                 )
             )
         return results
+
+
+def _law_hint(query: str) -> str | None:
+    if "시행규칙" in query:
+        return "시행규칙"
+    if "시행령" in query:
+        return "시행령"
+    if "감정평가에 관한 규칙" in query:
+        return "감정평가에 관한 규칙"
+    if "법률" in query or "감정평가법" in query:
+        return "감정평가 및 감정평가사에 관한 법률"
+    return None

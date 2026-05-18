@@ -20,11 +20,19 @@ def db_session():
         Base.metadata.drop_all(engine)
 
 
-def add_doc_with_chunk(session, text: str, embedding: list[float], *, source_id: str = "sample"):
+def add_doc_with_chunk(
+    session,
+    text: str,
+    embedding: list[float],
+    *,
+    source_id: str = "sample",
+    source_name: str | None = None,
+    metadata: dict | None = None,
+):
     doc = Document(
         source_id=source_id,
         source_path=f"sample_data/{source_id}.md",
-        source_name=f"{source_id}.md",
+        source_name=source_name or f"{source_id}.md",
         source_type="markdown",
         data_mode="sample",
         ingestion_status="loaded",
@@ -36,7 +44,7 @@ def add_doc_with_chunk(session, text: str, embedding: list[float], *, source_id:
         document_id=doc.id,
         chunk_index=0,
         text=text,
-        metadata_={"embedding": embedding, "source_path": doc.source_path, "data_mode": "sample"},
+        metadata_={"embedding": embedding, "source_path": doc.source_path, "data_mode": "sample", **(metadata or {})},
         source_lineage={"source_id": source_id, "chunk_index": 0},
     )
     session.add(chunk)
@@ -75,6 +83,33 @@ def test_retriever_uses_embedding_provider_when_query_vector_not_supplied(db_ses
 
     assert results[0].chunk_id == chunk.id
     assert results[0].score == 1.0
+
+
+def test_retriever_boosts_exact_article_number_matches_for_law_queries(db_session):
+    from app.rag.retriever import VectorRetriever
+
+    _, target = add_doc_with_chunk(
+        db_session,
+        "제27조 삭제 <2026. 3. 12.>",
+        [0.0, 1.0],
+        source_id="rule",
+        source_name="감정평가 및 감정평가사에 관한 법률 시행규칙",
+        metadata={"article_number": "제27조", "data_mode": "official"},
+    )
+    add_doc_with_chunk(
+        db_session,
+        "semantically close but not exact",
+        [1.0, 0.0],
+        source_id="other",
+        source_name="감정평가 및 감정평가사에 관한 법률 시행령",
+        metadata={"article_number": "제7조", "data_mode": "official"},
+    )
+
+    results = VectorRetriever(db_session).search("감정평가법 시행규칙 제27조는?", query_vector=[1.0, 0.0], limit=2)
+
+    assert results[0].chunk_id == target.id
+    assert results[0].score == 1.1
+    assert "제27조 삭제" in results[0].text
 
 
 def test_retriever_returns_empty_list_when_no_vector_chunks(db_session):
