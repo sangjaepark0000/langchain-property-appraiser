@@ -96,6 +96,44 @@ def test_sample_result_is_explicitly_marked_not_official(db_session):
     assert hydrated["citation"]["data_mode"] == "sample"
 
 
+def test_official_law_citation_includes_legal_metadata(db_session):
+    from app.rag.citations import hydrate_retrieval_results
+
+    metadata = {
+        "source_name": "감정평가 및 감정평가사에 관한 법률 시행규칙",
+        "source_authority": "국가법령정보센터",
+        "corpus_group": "appraisal_act_framework",
+        "law_level": "enforcement_rule",
+        "document_kind": "current_consolidated_rule",
+        "chunk_type": "article",
+        "article_number": "제27조",
+        "article_title": None,
+        "change_type": "deleted",
+        "revision_marker": "2026. 3. 12.",
+        "domain_metadata": {
+            "law_name": "감정평가 및 감정평가사에 관한 법률 시행규칙",
+            "article_number": "제27조",
+            "article_title": None,
+            "effective_date": "2026-03-12",
+            "revision_date": "2026-03-12",
+            "source_authority": "국가법령정보센터",
+        },
+    }
+    doc, chunk = add_retrieval_fixture(db_session, metadata=metadata, data_mode="official")
+    raw = RetrievalResult(chunk_id=chunk.id, document_id=doc.id, text=chunk.text, score=0.9, relevance="high")
+
+    citation = hydrate_retrieval_results(db_session, [raw])[0]["citation"]
+
+    assert citation["law_name"] == "감정평가 및 감정평가사에 관한 법률 시행규칙"
+    assert citation["article_number"] == "제27조"
+    assert citation["effective_date"] == "2026-03-12"
+    assert citation["revision_date"] == "2026-03-12"
+    assert citation["source_authority"] == "국가법령정보센터"
+    assert citation["document_kind"] == "current_consolidated_rule"
+    assert citation["change_type"] == "deleted"
+    assert citation["revision_marker"] == "2026. 3. 12."
+
+
 def test_missing_chunk_result_is_skipped(db_session):
     from app.rag.citations import hydrate_retrieval_results
 
