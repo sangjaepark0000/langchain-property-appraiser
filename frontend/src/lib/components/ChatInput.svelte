@@ -5,7 +5,7 @@
   };
 
   let { onSubmit, disabled = false }: Props = $props();
-  let question = '';
+  let question = $state('');
 
   async function submit() {
     const trimmed = question.trim();
@@ -16,7 +16,14 @@
   }
 </script>
 
-<form class="composer" data-testid="chat-input" on:submit|preventDefault={submit}>
+<form
+  class="composer"
+  data-testid="chat-input"
+  onsubmit={(event) => {
+    event.preventDefault();
+    void submit();
+  }}
+>
   <label for="question">Question</label>
   <div>
     <input

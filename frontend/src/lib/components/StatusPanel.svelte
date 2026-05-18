@@ -9,14 +9,15 @@
 
   let { statusKind, statusMessage, conversationId }: Props = $props();
 
-  $: headline =
+  let headline = $derived(
     statusKind === 'loading'
       ? 'Processing your question'
       : statusKind === 'insufficient_evidence'
         ? 'Evidence is insufficient'
         : statusKind === 'error'
           ? 'Chat error'
-          : 'Ready';
+          : 'Ready'
+  );
 </script>
 
 <aside class="status {statusKind}" data-testid="status-panel" aria-label="Status panel" aria-live="polite">

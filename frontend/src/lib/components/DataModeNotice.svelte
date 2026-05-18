@@ -10,8 +10,8 @@
     return mode && mode.trim() ? mode : 'unknown';
   }
 
-  $: currentMode = modeLabel(dataMode);
-  $: isOfficial = currentMode === 'official';
+  let currentMode = $derived(modeLabel(dataMode));
+  let isOfficial = $derived(currentMode === 'official');
 </script>
 
 <section class:official={isOfficial} class="notice" data-testid="data-mode-notice" aria-label="Data mode and safety notice">

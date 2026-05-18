@@ -12,7 +12,8 @@ def test_chat_input_component_supports_submit_guard_and_reset():
     assert "trim()" in component
     assert "if (!trimmed)" in component
     assert "question = ''" in component
-    assert "on:submit|preventDefault" in component
+    assert "onsubmit=" in component
+    assert "preventDefault()" in component
     assert "type=\"submit\"" in component
 
 
