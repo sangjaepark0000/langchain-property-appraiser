@@ -110,6 +110,7 @@ def test_retriever_boosts_exact_article_number_matches_for_law_queries(db_sessio
     assert results[0].chunk_id == target.id
     assert results[0].score == 1.1
     assert "제27조 삭제" in results[0].text
+    assert all("시행령" not in result.text for result in results if result.score > 1.0)
 
 
 def test_retriever_returns_empty_list_when_no_vector_chunks(db_session):

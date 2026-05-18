@@ -119,10 +119,16 @@ class VectorRetriever:
         result_by_id = {result.chunk_id: result for result in results}
         lexical_results: list[RetrievalResult] = []
         law_hint = _law_hint(query)
-        chunks = self.session.query(Chunk).all()
-        for chunk in chunks:
-            if (chunk.metadata_ or {}).get("article_number") not in normalized_articles:
-                continue
+        article_chunks = [
+            chunk
+            for chunk in self.session.query(Chunk).all()
+            if (chunk.metadata_ or {}).get("article_number") in normalized_articles
+        ]
+        if law_hint:
+            hinted_chunks = [chunk for chunk in article_chunks if chunk.document is not None and law_hint in chunk.document.source_name]
+            if hinted_chunks:
+                article_chunks = hinted_chunks
+        for chunk in article_chunks:
             document_name = chunk.document.source_name if chunk.document is not None else ""
             score = 1.1 if law_hint and law_hint in document_name else 1.01
             if score < min_score:
