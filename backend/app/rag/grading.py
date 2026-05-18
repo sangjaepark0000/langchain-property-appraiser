@@ -16,8 +16,8 @@ class RetrievalGrade:
 def grade_retrieval_results(
     results: list[RetrievalResult],
     *,
-    sufficient_threshold: float = 0.8,
-    weak_threshold: float = 0.4,
+    sufficient_threshold: float = 0.5,
+    weak_threshold: float = 0.25,
 ) -> RetrievalGrade:
     if not results:
         return RetrievalGrade(status="irrelevant", max_score=0.0, retrieved_count=0, reason="no results")

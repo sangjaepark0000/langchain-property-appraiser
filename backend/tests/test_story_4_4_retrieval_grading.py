@@ -46,6 +46,7 @@ def test_grade_retrieval_results_classifies_sufficient_weak_irrelevant():
     from app.rag.grading import grade_retrieval_results
 
     assert grade_retrieval_results([RetrievalResult(1, 1, "x", 0.85, "high")]).status == "sufficient"
+    assert grade_retrieval_results([RetrievalResult(1, 1, "x", 0.55, "medium")]).status == "sufficient"
     assert grade_retrieval_results([RetrievalResult(1, 1, "x", 0.45, "medium")]).status == "weak"
     assert grade_retrieval_results([]).status == "irrelevant"
     assert grade_retrieval_results([RetrievalResult(1, 1, "x", 0.1, "low")]).status == "irrelevant"
