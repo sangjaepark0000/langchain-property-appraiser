@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Any, Protocol
 
+from app.core.config import Settings, get_settings
 from app.rag.safety import apply_response_safety_policy
 
 
@@ -47,6 +48,82 @@ class ExtractiveFallbackAnswerProvider:
         return AnswerProviderResult(answer=prefix + evidence_text, provider=self.name, fallback=True)
 
 
+class OpenAIAnswerProvider:
+    name = "openai"
+
+    def __init__(self, *, api_key: str, model: str, client: Any | None = None) -> None:
+        self.model = model
+        if client is not None:
+            self.client = client
+            return
+        try:
+            from openai import OpenAI
+        except ImportError as exc:  # pragma: no cover - dependency packaging guard
+            raise RuntimeError("openai package is required for LLM_PROVIDER=openai") from exc
+        self.client = OpenAI(api_key=api_key)
+
+    def generate(self, question: str, evidence: list[dict]) -> AnswerProviderResult:
+        prompt = _build_grounded_answer_prompt(question, evidence)
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You answer Korean appraisal-law RAG questions using only the provided evidence. "
+                        "Do not fabricate law articles, dates, source URLs, legal conclusions, or appraisal determinations. "
+                        "If evidence is insufficient, say so. Always keep a reference-aid/legal-advice disclaimer."
+                    ),
+                },
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0,
+        )
+        answer = response.choices[0].message.content or "근거 기반 답변을 생성하지 못했습니다."
+        return AnswerProviderResult(answer=answer.strip(), provider=f"openai:{self.model}", fallback=False)
+
+
+def get_answer_provider(settings: Settings | None = None) -> AnswerProvider:
+    resolved = settings or get_settings()
+    provider_name = resolved.llm_provider.lower()
+    if provider_name in {"", "none", "extractive", "fallback", "local"}:
+        return ExtractiveFallbackAnswerProvider()
+    if provider_name == "openai" and resolved.llm_api_key:
+        return OpenAIAnswerProvider(api_key=resolved.llm_api_key, model=resolved.llm_model)
+    return ExtractiveFallbackAnswerProvider()
+
+
+def _build_grounded_answer_prompt(question: str, evidence: list[dict]) -> str:
+    evidence_blocks: list[str] = []
+    for index, item in enumerate(evidence, start=1):
+        citation = item.get("citation") or {}
+        metadata = item.get("metadata") or {}
+        evidence_blocks.append(
+            "\n".join(
+                [
+                    f"[근거 {index}]",
+                    f"법령명: {citation.get('law_name') or citation.get('source_name') or 'unknown'}",
+                    f"조문: {citation.get('article_number') or metadata.get('article_number') or 'unknown'} {citation.get('article_title') or ''}".strip(),
+                    f"시행일: {citation.get('effective_date') or 'unknown'}",
+                    f"개정일: {citation.get('revision_date') or 'unknown'}",
+                    f"출처기관: {citation.get('source_authority') or 'unknown'}",
+                    f"문서종류: {citation.get('document_kind') or metadata.get('document_kind') or 'unknown'}",
+                    "본문:",
+                    item.get("text", ""),
+                ]
+            )
+        )
+    return (
+        "질문에 대해 아래 근거만 사용해 한국어로 답변하세요.\n"
+        "규칙:\n"
+        "1. 근거에 없는 내용은 추정하지 말고 '제공된 근거만으로는 확인할 수 없습니다'라고 말하세요.\n"
+        "2. 법률 자문, 위법 판단, 감정평가 적정성 최종 판단을 하지 마세요.\n"
+        "3. 답변에는 관련 법령명과 조문번호를 명시하세요.\n\n"
+        f"질문: {question}\n\n"
+        + "\n\n".join(evidence_blocks)
+    )
+
+
 def _resolve_data_mode(evidence: list[dict]) -> str:
     modes = [item.get("data_mode") or "unknown" for item in evidence]
     if not modes:
@@ -79,7 +156,7 @@ def compose_answer(
             is_official=False,
         )
 
-    resolved_provider = provider or ExtractiveFallbackAnswerProvider()
+    resolved_provider = provider or get_answer_provider()
     provider_result = resolved_provider.generate(question, evidence)
     answer = provider_result.answer
     if data_mode == "sample" and "sample/local data" not in answer:

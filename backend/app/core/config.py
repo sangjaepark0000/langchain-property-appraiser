@@ -24,6 +24,7 @@ class Settings(BaseSettings):
 
     llm_provider: str = Field(default="none", alias="LLM_PROVIDER")
     llm_api_key: str | None = Field(default=None, alias="LLM_API_KEY")
+    llm_model: str = Field(default="gpt-4o-mini", alias="LLM_MODEL")
 
     embedding_provider: str = Field(default="none", alias="EMBEDDING_PROVIDER")
     embedding_api_key: str | None = Field(default=None, alias="EMBEDDING_API_KEY")
@@ -57,6 +58,7 @@ class Settings(BaseSettings):
             "database_configured": bool(self.database_url),
             "llm_provider": self.llm_provider,
             "has_llm_api_key": self.has_llm_api_key,
+            "llm_model": self.llm_model,
             "embedding_provider": self.embedding_provider,
             "has_embedding_api_key": self.has_embedding_api_key,
             "embedding_dimensions": self.embedding_dimensions,
