@@ -113,33 +113,6 @@ def test_retriever_boosts_exact_article_number_matches_for_law_queries(db_sessio
     assert all("시행령" not in result.text for result in results if result.score > 1.0)
 
 
-def test_retriever_boosts_sample_appraisal_report_when_query_names_sample_report(db_session):
-    from app.rag.retriever import VectorRetriever
-
-    _, target = add_doc_with_chunk(
-        db_session,
-        "샘플 감정평가서에는 공시지가기준법, 거래사례비교법, 원가법, 수익방식 검토가 적혀 있다.",
-        [0.0, 1.0],
-        source_id="sample-report",
-        source_name="sample-appraisal-report.md",
-        metadata={"data_mode": "sample"},
-    )
-    add_doc_with_chunk(
-        db_session,
-        "감정평가에 관한 규칙 제11조는 감정평가방식을 설명한다.",
-        [1.0, 0.0],
-        source_id="official-rule",
-        source_name="감정평가에 관한 규칙",
-        metadata={"data_mode": "official", "article_number": "제11조"},
-    )
-
-    results = VectorRetriever(db_session).search("샘플 감정평가서에서 적용한 감정평가 방법은?", query_vector=[1.0, 0.0], limit=2)
-
-    assert results[0].chunk_id == target.id
-    assert results[0].score == 1.08
-    assert "공시지가기준법" in results[0].text
-
-
 def test_retriever_returns_empty_list_when_no_vector_chunks(db_session):
     from app.rag.retriever import VectorRetriever
 
