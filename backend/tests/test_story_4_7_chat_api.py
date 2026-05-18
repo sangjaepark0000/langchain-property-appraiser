@@ -54,6 +54,24 @@ def build_client(seed: bool = True):
     return TestClient(app), Session
 
 
+def test_chat_api_skips_retrieval_for_greeting_smalltalk():
+    client, Session = build_client()
+
+    response = client.post("/chat", json={"question": "hi"})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["insufficient_evidence"] is False
+    assert body["citations"] == []
+    assert body["data_mode"] == "none"
+    assert body["retrieval_trace"]["relevance_result"] == "not_applicable"
+    assert "검토하고 싶은 서류" in body["answer"]
+    session = Session()
+    assert session.query(RetrievalTrace).count() == 1
+    session.close()
+    app.dependency_overrides.clear()
+
+
 def test_chat_api_creates_conversation_and_returns_contract_shape():
     client, Session = build_client()
 

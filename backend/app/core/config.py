@@ -1,3 +1,4 @@
+import os
 from functools import lru_cache
 
 from pydantic import Field, computed_field
@@ -69,6 +70,20 @@ class Settings(BaseSettings):
         }
 
 
+def configure_langsmith_environment(settings: Settings) -> None:
+    if settings.langsmith_tracing:
+        os.environ.setdefault("LANGSMITH_TRACING", "true")
+        os.environ.setdefault("LANGCHAIN_TRACING_V2", "true")
+    if settings.langsmith_api_key:
+        os.environ.setdefault("LANGSMITH_API_KEY", settings.langsmith_api_key)
+        os.environ.setdefault("LANGCHAIN_API_KEY", settings.langsmith_api_key)
+    if settings.langsmith_project:
+        os.environ.setdefault("LANGSMITH_PROJECT", settings.langsmith_project)
+        os.environ.setdefault("LANGCHAIN_PROJECT", settings.langsmith_project)
+
+
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()
+    settings = Settings()
+    configure_langsmith_environment(settings)
+    return settings

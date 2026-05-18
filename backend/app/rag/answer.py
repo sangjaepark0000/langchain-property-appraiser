@@ -57,30 +57,27 @@ class OpenAIAnswerProvider:
             self.client = client
             return
         try:
-            from openai import OpenAI
+            from langchain_openai import ChatOpenAI
         except ImportError as exc:  # pragma: no cover - dependency packaging guard
-            raise RuntimeError("openai package is required for LLM_PROVIDER=openai") from exc
-        self.client = OpenAI(api_key=api_key)
+            raise RuntimeError("langchain-openai package is required for LLM_PROVIDER=openai") from exc
+        self.client = ChatOpenAI(model=model, api_key=api_key, temperature=0)
 
     def generate(self, question: str, evidence: list[dict]) -> AnswerProviderResult:
         prompt = _build_grounded_answer_prompt(question, evidence)
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You answer Korean appraisal-law RAG questions using only the provided evidence. "
-                        "Do not fabricate law articles, dates, source URLs, legal conclusions, or appraisal determinations. "
-                        "If evidence is insufficient, say so. Always keep a reference-aid/legal-advice disclaimer."
-                    ),
-                },
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0,
-        )
-        answer = response.choices[0].message.content or "근거 기반 답변을 생성하지 못했습니다."
-        return AnswerProviderResult(answer=answer.strip(), provider=f"openai:{self.model}", fallback=False)
+        messages = [
+            (
+                "system",
+                "You answer Korean appraisal-law RAG questions using only the provided evidence. "
+                "Do not fabricate law articles, dates, source URLs, legal conclusions, or appraisal determinations. "
+                "If evidence is insufficient, say so. Always keep a reference-aid/legal-advice disclaimer.",
+            ),
+            ("user", prompt),
+        ]
+        response = self.client.invoke(messages)
+        answer = getattr(response, "content", None) or "근거 기반 답변을 생성하지 못했습니다."
+        if isinstance(answer, list):
+            answer = "".join(str(part) for part in answer)
+        return AnswerProviderResult(answer=str(answer).strip(), provider=f"langchain-openai:{self.model}", fallback=False)
 
 
 def get_answer_provider(settings: Settings | None = None) -> AnswerProvider:

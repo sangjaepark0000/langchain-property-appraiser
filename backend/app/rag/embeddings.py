@@ -52,19 +52,22 @@ class OpenAIEmbeddingProvider:
             self.client = client
             return
         try:
-            from openai import OpenAI
+            from langchain_openai import OpenAIEmbeddings
         except ImportError as exc:  # pragma: no cover - dependency packaging guard
-            raise RuntimeError("openai package is required for EMBEDDING_PROVIDER=openai") from exc
-        self.client = OpenAI(api_key=api_key)
+            raise RuntimeError("langchain-openai package is required for EMBEDDING_PROVIDER=openai") from exc
+        self.client = OpenAIEmbeddings(model=model, api_key=api_key, dimensions=dimensions)
 
     def embed_text(self, text: str) -> EmbeddingResult:
-        kwargs: dict[str, Any] = {"model": self.model, "input": text}
-        if self.dimensions > 0:
-            kwargs["dimensions"] = self.dimensions
-        response = self.client.embeddings.create(**kwargs)
-        vector = [float(value) for value in response.data[0].embedding]
+        if hasattr(self.client, "embed_query"):
+            vector = [float(value) for value in self.client.embed_query(text)]
+        else:
+            kwargs: dict[str, Any] = {"model": self.model, "input": text}
+            if self.dimensions > 0:
+                kwargs["dimensions"] = self.dimensions
+            response = self.client.embeddings.create(**kwargs)
+            vector = [float(value) for value in response.data[0].embedding]
         return EmbeddingResult(
-            provider=f"openai:{self.model}",
+            provider=f"langchain-openai:{self.model}",
             vector=vector,
             status="success",
             fallback=False,

@@ -75,27 +75,16 @@ def test_configured_provider_is_used_through_abstraction():
 def test_openai_answer_provider_builds_grounded_prompt_without_live_api():
     from app.rag.answer import OpenAIAnswerProvider
 
-    class FakeCompletions:
-        def __init__(self) -> None:
-            self.kwargs = None
-
-        def create(self, **kwargs):
-            self.kwargs = kwargs
-
-            class Message:
-                content = "감정평가법 시행규칙 제27조는 삭제되었습니다. 법률 자문이 아닌 참고용 답변입니다."
-
-            class Choice:
-                message = Message()
-
-            class Response:
-                choices = [Choice()]
-
-            return Response()
+    class FakeResponse:
+        content = "감정평가법 시행규칙 제27조는 삭제되었습니다. 법률 자문이 아닌 참고용 답변입니다."
 
     class FakeClient:
         def __init__(self) -> None:
-            self.chat = type("Chat", (), {"completions": FakeCompletions()})()
+            self.messages = None
+
+        def invoke(self, messages):
+            self.messages = messages
+            return FakeResponse()
 
     client = FakeClient()
     evidence = [
@@ -114,14 +103,13 @@ def test_openai_answer_provider_builds_grounded_prompt_without_live_api():
 
     result = OpenAIAnswerProvider(api_key="test-key", model="gpt-test", client=client).generate("제27조는?", evidence)
 
-    kwargs = client.chat.completions.kwargs
-    assert result.provider == "openai:gpt-test"
+    assert result.provider == "langchain-openai:gpt-test"
     assert result.fallback is False
-    assert kwargs["model"] == "gpt-test"
-    assert kwargs["temperature"] == 0
-    assert "제공된 근거만" in kwargs["messages"][1]["content"]
-    assert "감정평가 및 감정평가사에 관한 법률 시행규칙" in kwargs["messages"][1]["content"]
-    assert "제27조 삭제" in kwargs["messages"][1]["content"]
+    assert client.messages[0][0] == "system"
+    assert client.messages[1][0] == "user"
+    assert "제공된 근거만" in client.messages[1][1]
+    assert "감정평가 및 감정평가사에 관한 법률 시행규칙" in client.messages[1][1]
+    assert "제27조 삭제" in client.messages[1][1]
 
 
 def test_get_answer_provider_uses_openai_when_configured():

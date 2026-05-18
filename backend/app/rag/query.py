@@ -29,6 +29,26 @@ def _empty_rewrite(question: str) -> QueryRewriteResult:
     return QueryRewriteResult(original_query=question, rewritten_query=None, status="not_needed", fallback=False, attempts=0)
 
 
+def _is_greeting_or_smalltalk(question: str) -> bool:
+    normalized = question.strip().lower()
+    return normalized in {"hi", "hello", "hey", "안녕", "안녕하세요", "ㅎㅇ", "하이"}
+
+
+def _smalltalk_answer(question: str) -> AnswerResult:
+    return AnswerResult(
+        answer=(
+            "안녕하세요. 작성한 감정평가 서류에서 익숙해서 놓치기 쉬운 확인 포인트를 "
+            "공식 법령 근거와 함께 점검할 수 있도록 도와드립니다. 검토하고 싶은 서류 내용이나 질문을 입력해 주세요."
+        ),
+        status="answered",
+        provider="local-intent-router",
+        fallback=True,
+        citations=[],
+        data_mode="none",
+        is_official=False,
+    )
+
+
 def answer_question(
     session: Session,
     question: str,
@@ -42,6 +62,31 @@ def answer_question(
     conversation_id: int | None = None,
     message_id: int | None = None,
 ) -> RAGQueryResult:
+    if _is_greeting_or_smalltalk(question):
+        answer = _smalltalk_answer(question)
+        create_retrieval_trace(
+            session,
+            original_query=question,
+            rewritten_query=None,
+            retrieved_chunk_ids=[],
+            rewritten_retrieved_chunk_ids=None,
+            relevance_result="not_applicable",
+            conversation_id=conversation_id,
+            message_id=message_id,
+            insufficient_evidence_reason=None,
+            extra_summary={"intent": "smalltalk", "retrieval_skipped": True, "insufficient_evidence": False},
+        )
+        return RAGQueryResult(
+            question=question,
+            answer=answer,
+            retrieved_count=0,
+            results=[],
+            grading=RetrievalGrade(status="not_applicable", max_score=0.0, retrieved_count=0),
+            rewrite=_empty_rewrite(question),
+            insufficient_evidence=False,
+            insufficient_evidence_reason=None,
+        )
+
     retriever = VectorRetriever(session)
     raw_results = retriever.search(
         question,

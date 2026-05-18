@@ -51,7 +51,7 @@ def test_openai_embedding_provider_uses_configured_model_dimensions_without_live
 
     result = provider.embed_text("hello")
 
-    assert result.provider == "openai:text-embedding-3-small"
+    assert result.provider == "langchain-openai:text-embedding-3-small"
     assert result.vector == [0.1, 0.2, 0.3]
     assert result.status == "success"
     assert result.fallback is False
