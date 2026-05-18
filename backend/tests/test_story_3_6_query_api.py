@@ -88,6 +88,6 @@ def test_query_api_returns_insufficient_evidence_without_server_error():
     assert response.status_code == 200
     body = response.json()
     assert body["insufficient_evidence"] is True
-    assert "insufficient" in body["answer"].lower()
+    assert "근거가 부족" in body["answer"]
     assert body["citations"] == []
     app.dependency_overrides.clear()

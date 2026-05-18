@@ -1,0 +1,11 @@
+{
+  "python_version": "3.13",
+  "dependencies": [
+    ".",
+    "langchain-openai"
+  ],
+  "graphs": {
+    "rag_design": "./app/graph/studio.py:graph"
+  },
+  "env": "../.env"
+}

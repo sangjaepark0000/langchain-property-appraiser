@@ -3,12 +3,13 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.routes import router
 from app.core.config import get_settings
 
 
 SERVICE_NAME = "langchain-property-appraiser-backend"
 settings = get_settings()
+
+from app.api.routes import router  # noqa: E402 - configure tracing env before importing graph/RAG modules
 
 app = FastAPI(
     title=settings.app_name,

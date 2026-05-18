@@ -47,12 +47,12 @@ class ExtractiveFallbackAnswerProvider:
         evidence_text = " ".join(item.get("text", "") for item in evidence).strip()
         if not evidence_text:
             return AnswerProviderResult(
-                answer="Insufficient evidence in the available local/sample context.",
+                answer="사용 가능한 근거가 부족합니다.",
                 provider=self.name,
                 fallback=True,
             )
         data_modes = {item.get("data_mode", "unknown") for item in evidence}
-        prefix = "Based on sample/local data, " if "sample" in data_modes else "Based on retrieved evidence, "
+        prefix = "샘플/로컬 데이터 기준으로, " if "sample" in data_modes else "검색된 근거 기준으로, "
         return AnswerProviderResult(answer=prefix + evidence_text, provider=self.name, fallback=True)
 
 
@@ -76,8 +76,9 @@ class OpenAIAnswerProvider:
         messages = [
             (
                 "system",
-                "You answer Korean appraisal-law RAG questions using only the provided evidence. "
-                "Do not fabricate law articles, dates, source URLs, legal conclusions, or appraisal determinations. "
+                "You are a Korean appraisal-document review assistant. "
+                "Your job is not to dump retrieved text, but to synthesize practical review points from evidence. "
+                "Use only the provided evidence. Do not fabricate law articles, dates, source URLs, legal conclusions, or appraisal determinations. "
                 "If evidence is insufficient, say so. Always keep a reference-aid/legal-advice disclaimer.",
             ),
             ("user", prompt),
@@ -120,11 +121,21 @@ def _build_grounded_answer_prompt(question: str, evidence: list[dict]) -> str:
             )
         )
     return (
-        "질문에 대해 아래 근거만 사용해 한국어로 답변하세요.\n"
-        "규칙:\n"
-        "1. 근거에 없는 내용은 추정하지 말고 '제공된 근거만으로는 확인할 수 없습니다'라고 말하세요.\n"
-        "2. 법률 자문, 위법 판단, 감정평가 적정성 최종 판단을 하지 마세요.\n"
-        "3. 답변에는 관련 법령명과 조문번호를 명시하세요.\n\n"
+        "당신은 감정평가 서류 검토 도우미입니다. 질문에 대해 아래 근거만 사용해 한국어로 답변하세요.\n"
+        "목표:\n"
+        "- 검색된 문장을 그대로 나열하지 말고, 사용자가 서류에서 무엇을 확인해야 하는지 '말이 되는 검토 의견'으로 종합하세요.\n"
+        "- 법령 근거가 있으면 조문을 근거로 확인 포인트를 연결하세요.\n"
+        "- 샘플/사용자 문서 근거와 공식 법령 근거가 함께 있으면 두 출처의 역할을 구분하세요.\n\n"
+        "답변 형식:\n"
+        "1. 결론: 질문에 대한 짧은 답을 먼저 제시하세요.\n"
+        "2. 확인 포인트: 서류에서 점검할 항목을 3~6개 bullet로 정리하세요.\n"
+        "3. 근거: 각 포인트 옆에 가능한 경우 법령명과 조문번호를 붙이세요.\n"
+        "4. 한계/주의: 근거로 확인할 수 없는 부분과 참고용 답변이라는 점을 짧게 적으세요.\n\n"
+        "엄격한 규칙:\n"
+        "- 근거에 없는 내용은 추정하지 말고 '제공된 근거만으로는 확인할 수 없습니다'라고 말하세요.\n"
+        "- 법률 자문, 위법 판단, 감정평가 적정성 최종 판단을 하지 마세요.\n"
+        "- 관련 없는 근거가 섞여 있으면 억지로 사용하지 말고 제외하거나 한계로 설명하세요.\n"
+        "- 근거 원문을 길게 복붙하지 마세요.\n\n"
         f"질문: {question}\n\n"
         + "\n\n".join(evidence_blocks)
     )
@@ -165,8 +176,8 @@ def compose_answer(
     resolved_provider = provider or get_answer_provider()
     provider_result = resolved_provider.generate(question, evidence)
     answer = provider_result.answer
-    if data_mode == "sample" and "sample/local data" not in answer:
-        answer = f"Based on sample/local data, {answer}"
+    if data_mode == "sample" and "샘플" not in answer:
+        answer = f"샘플/로컬 데이터 기준으로, {answer}"
     answer = apply_response_safety_policy(question, answer, evidence)
     return AnswerResult(
         answer=answer,

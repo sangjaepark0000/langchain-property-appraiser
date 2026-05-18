@@ -40,7 +40,7 @@ def test_answer_composer_returns_insufficient_evidence_without_context():
     result = compose_answer("What official rule applies?", [])
 
     assert result.status == "insufficient_evidence"
-    assert "insufficient" in result.answer.lower()
+    assert "근거가 부족" in result.answer
     assert result.citations == []
 
 
@@ -49,7 +49,7 @@ def test_sample_answer_is_marked_as_local_sample_not_official():
 
     result = compose_answer("What roof color?", [make_result("Fictional Parcel Alpha has a blue roof.")])
 
-    assert "sample/local data" in result.answer
+    assert "샘플/로컬 데이터" in result.answer
     assert "official legal conclusion" not in result.answer.lower()
     assert result.is_official is False
 
@@ -66,7 +66,7 @@ def test_configured_provider_is_used_through_abstraction():
     result = compose_answer("question", [make_result("evidence text")], provider=StaticProvider())
 
     assert "provider answer" in result.answer
-    assert "sample/local data" in result.answer
+    assert "샘플/로컬 데이터" in result.answer
     assert result.provider == "static-provider"
     assert result.fallback is False
     assert result.citations
@@ -109,6 +109,8 @@ def test_openai_answer_provider_builds_grounded_prompt_without_live_api():
     assert client.config == {"run_name": "appraisal_law_answer"}
     assert client.messages[0][0] == "system"
     assert client.messages[1][0] == "user"
+    assert "말이 되는 검토 의견" in client.messages[1][1]
+    assert "확인 포인트" in client.messages[1][1]
     assert "제공된 근거만" in client.messages[1][1]
     assert "감정평가 및 감정평가사에 관한 법률 시행규칙" in client.messages[1][1]
     assert "제27조 삭제" in client.messages[1][1]
