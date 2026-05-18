@@ -12,9 +12,9 @@ def test_status_panel_displays_loading_error_and_insufficient_states():
     assert "loading" in panel
     assert "error" in panel
     assert "insufficient_evidence" in panel
-    assert "Processing your question" in panel
-    assert "Evidence is insufficient" in panel
-    assert "Try again" in panel
+    assert "질문을 처리하는 중입니다" in panel
+    assert "근거가 충분하지 않습니다" in panel
+    assert "다시 시도하세요" in panel
 
 
 def test_page_sets_loading_then_insufficient_or_ready_or_error_status():

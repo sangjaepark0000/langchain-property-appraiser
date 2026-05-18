@@ -19,7 +19,7 @@ def test_default_page_has_chat_layout_regions():
     assert 'data-testid="message-list"' in page
     assert 'data-testid="chat-input"' in page
     assert 'data-testid="status-panel"' in page
-    assert "Property Appraiser Chat" in page
+    assert "감정평가 법령 채팅" in page
 
 
 def test_frontend_keeps_simple_api_structure_without_global_state_manager():

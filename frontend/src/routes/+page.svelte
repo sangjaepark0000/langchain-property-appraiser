@@ -8,20 +8,20 @@
   type CitationForMessage = Citation;
 
   let statusKind: ChatStatus = 'ready';
-  let status = 'Ready';
+  let status = '준비됨';
   let isSubmitting = false;
   let conversationId: number | undefined;
   let messages: ChatMessage[] = [
     {
       role: 'assistant',
-      content: 'Ask a property appraisal question to start a grounded conversation.'
+      content: '감정평가 법령이나 근거에 대해 질문해 보세요.'
     }
   ];
 
   async function submitQuestion(question: string) {
     messages = [...messages, { role: 'user', content: question }];
     statusKind = 'loading';
-    status = 'Waiting for backend /chat response...';
+    status = '백엔드 /chat 응답을 기다리는 중입니다...';
     isSubmitting = true;
 
     try {
@@ -40,10 +40,10 @@
       ];
       statusKind = response.insufficient_evidence ? 'insufficient_evidence' : 'ready';
       status = response.insufficient_evidence
-        ? `Insufficient evidence: ${response.insufficient_evidence_reason ?? 'reason unavailable'}`
-        : `Answered from ${response.data_mode} data`;
+        ? `근거 부족: ${response.insufficient_evidence_reason ?? '사유 없음'}`
+        : `${response.data_mode} 데이터 기반으로 답변했습니다`;
     } catch (error) {
-      const errorMessage = error instanceof Error ? `Chat error: ${error.message}` : 'Chat error: unexpected failure';
+      const errorMessage = error instanceof Error ? `채팅 오류: ${error.message}` : '채팅 오류: 알 수 없는 실패';
       statusKind = 'error';
       status = errorMessage;
       messages = [...messages, { role: 'assistant', content: errorMessage }];
@@ -54,17 +54,17 @@
 </script>
 
 <svelte:head>
-  <title>Property Appraiser Chat</title>
+  <title>감정평가 법령 RAG 채팅</title>
 </svelte:head>
 
 <main class="shell">
   <section class="hero">
-    <p class="eyebrow">LangChain Property Appraiser</p>
-    <h1>Property Appraiser Chat</h1>
-    <p>Multi-turn RAG workspace for appraisal questions, citations, and evidence status.</p>
+    <p class="eyebrow">감정평가 법령 RAG</p>
+    <h1>감정평가 법령 채팅</h1>
+    <p>공식 법령 근거와 인용을 확인하며 감정평가 관련 질문을 해볼 수 있는 대화형 작업공간입니다.</p>
   </section>
 
-  <section class="chat-panel" aria-label="Chat workspace">
+  <section class="chat-panel" aria-label="채팅 작업공간">
     <div data-testid="message-list">
       <MessageList {messages} />
     </div>

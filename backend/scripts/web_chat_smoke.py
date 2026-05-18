@@ -30,8 +30,8 @@ def verify_frontend_contract() -> None:
 
     require("messages = [...messages, { role: 'user'" in page and "role: 'assistant'" in page, "frontend_message_contract")
     require("CitationPanel" in message_list and "source_name" in citation_panel and "chunk_index" in citation_panel, "frontend_citation_contract")
-    require("dataMode" in data_mode and "not an official determination" in data_mode, "frontend_data_mode_contract")
-    require("insufficient_evidence" in status and "Evidence is insufficient" in status, "frontend_insufficient_evidence_contract")
+    require("dataMode" in data_mode and "공식 판단이 아닙니다" in data_mode, "frontend_data_mode_contract")
+    require("insufficient_evidence" in status and "근거가 충분하지 않습니다" in status, "frontend_insufficient_evidence_contract")
 
 
 def main() -> int:

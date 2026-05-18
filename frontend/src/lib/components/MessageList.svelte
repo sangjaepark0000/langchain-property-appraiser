@@ -22,9 +22,9 @@
     <article class:assistant={message.role === 'assistant'} class:user={message.role === 'user'}>
       <span>{message.role}</span>
       <p class="answer-body">{message.content}</p>
-      {#if message.role === 'assistant'}
+      {#if message.role === 'assistant' && (message.dataMode || message.insufficientEvidenceReason)}
         <DataModeNotice dataMode={message.dataMode} insufficientEvidenceReason={message.insufficientEvidenceReason} />
-        <p class="safety-copy">Reference aid only; do not treat this as a legal violation or appraisal appropriateness determination.</p>
+        <p class="safety-copy">참고용 답변입니다. 법률 위반 여부나 감정평가 적정성에 대한 최종 판단으로 사용하지 마세요.</p>
       {/if}
       {#if message.role === 'assistant' && message.citations}
         <CitationPanel citations={message.citations} />

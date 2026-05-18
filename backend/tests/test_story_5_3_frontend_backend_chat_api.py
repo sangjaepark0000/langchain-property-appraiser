@@ -30,6 +30,6 @@ def test_page_shows_explicit_error_without_breaking_message_list():
     page = (FRONTEND / "src" / "routes" / "+page.svelte").read_text()
 
     assert "catch (error)" in page
-    assert "Chat error:" in page
+    assert "채팅 오류:" in page
     assert "messages = [...messages, { role: 'assistant', content: errorMessage }]" in page
     assert "isSubmitting = false" in page

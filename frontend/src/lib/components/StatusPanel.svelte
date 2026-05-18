@@ -11,22 +11,22 @@
 
   let headline = $derived(
     statusKind === 'loading'
-      ? 'Processing your question'
+      ? '질문을 처리하는 중입니다'
       : statusKind === 'insufficient_evidence'
-        ? 'Evidence is insufficient'
+        ? '근거가 충분하지 않습니다'
         : statusKind === 'error'
-          ? 'Chat error'
-          : 'Ready'
+          ? '채팅 오류'
+          : '준비됨'
   );
 </script>
 
-<aside class="status {statusKind}" data-testid="status-panel" aria-label="Status panel" aria-live="polite">
+<aside class="status {statusKind}" data-testid="status-panel" aria-label="상태 패널" aria-live="polite">
   <strong>{headline}</strong>
   <p>{statusMessage}</p>
   {#if statusKind === 'error'}
-    <small>Try again when the backend is reachable.</small>
+    <small>백엔드에 연결된 뒤 다시 시도하세요.</small>
   {:else}
-    <small>Conversation: {conversationId ?? 'new'}</small>
+    <small>대화 ID: {conversationId ?? '새 대화'}</small>
   {/if}
 </aside>
 

@@ -14,12 +14,12 @@
   let isOfficial = $derived(currentMode === 'official');
 </script>
 
-<section class:official={isOfficial} class="notice" data-testid="data-mode-notice" aria-label="Data mode and safety notice">
-  <strong>Data mode: {currentMode}</strong>
+<section class:official={isOfficial} class="notice" data-testid="data-mode-notice" aria-label="데이터 출처와 안전 안내">
+  <strong>데이터 모드: {currentMode}</strong>
   {#if !isOfficial}
-    <p>sample, user_provided, or unknown data means this response is not an official determination. Treat it as a reference aid, not a legal or appraisal suitability decision.</p>
+    <p>샘플, 사용자 제공, 또는 출처 불명 데이터는 공식 판단이 아닙니다. 법률 판단이나 감정평가 적정성 판단이 아니라 참고용으로만 보세요.</p>
   {:else}
-    <p>This response uses official-labeled data, but remains a reference aid and not a final legal determination.</p>
+    <p>공식 출처로 표시된 데이터를 사용했지만, 이 답변은 참고용이며 최종 법률 판단이 아닙니다.</p>
   {/if}
   {#if insufficientEvidenceReason}
     <p class="reason">{insufficientEvidenceReason}</p>

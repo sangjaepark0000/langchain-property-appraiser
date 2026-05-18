@@ -24,16 +24,16 @@
     void submit();
   }}
 >
-  <label for="question">Question</label>
+  <label for="question">질문</label>
   <div>
     <input
       id="question"
       bind:value={question}
       disabled={disabled}
-      placeholder="Ask about a property or appraisal basis"
+      placeholder="감정평가 법령이나 근거에 대해 질문하세요"
       autocomplete="off"
     />
-    <button type="submit" disabled={disabled || !question.trim()}>Send</button>
+    <button type="submit" disabled={disabled || !question.trim()}>보내기</button>
   </div>
 </form>
 

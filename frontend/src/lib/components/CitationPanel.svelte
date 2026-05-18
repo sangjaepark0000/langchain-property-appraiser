@@ -40,53 +40,53 @@
 </script>
 
 {#if citations.length > 0}
-  <section class="citations" data-testid="citation-panel" aria-label="Citations and source evidence">
-    <h2>Sources</h2>
+  <section class="citations" data-testid="citation-panel" aria-label="인용과 근거 출처">
+    <h2>근거 출처</h2>
     <ol>
       {#each citations as citation}
         <li>
           <p class="legal-label">{legalLabel(citation)}</p>
           <dl>
             <div>
-              <dt>Authority</dt>
+              <dt>출처 기관</dt>
               <dd>{field(citation.source_authority)}</dd>
             </div>
             <div>
-              <dt>Effective</dt>
+              <dt>시행일</dt>
               <dd>{field(citation.effective_date)}</dd>
             </div>
             <div>
-              <dt>Revision</dt>
+              <dt>개정일</dt>
               <dd>{field(citation.revision_date)}</dd>
             </div>
             <div>
-              <dt>Source name</dt>
+              <dt>출처명</dt>
               <dd>{field(citation.source_name)}</dd>
             </div>
             <div>
-              <dt>Article</dt>
+              <dt>조문</dt>
               <dd>{field(citation.article_number)} {field(citation.article_title)}</dd>
             </div>
             <div>
-              <dt>Document kind</dt>
+              <dt>문서 종류</dt>
               <dd>{field(citation.document_kind)}</dd>
             </div>
             <div>
-              <dt>Chunk</dt>
+              <dt>청크</dt>
               <dd>{field(citation.chunk_type)} #{field(citation.chunk_index)}</dd>
             </div>
             {#if citation.change_type && citation.change_type !== 'unknown'}
               <div>
-                <dt>Change</dt>
+                <dt>변경 표시</dt>
                 <dd>{field(citation.change_type)} {field(citation.revision_marker)}</dd>
               </div>
             {/if}
             <div>
-              <dt>Source path</dt>
+              <dt>출처 경로</dt>
               <dd>{field(citation.source_path)}</dd>
             </div>
             <div>
-              <dt>Data mode</dt>
+              <dt>데이터 모드</dt>
               <dd>{field(citation.data_mode)}</dd>
             </div>
           </dl>
