@@ -19,7 +19,8 @@ def test_default_page_has_chat_layout_regions():
     assert 'data-testid="message-list"' in page
     assert 'data-testid="chat-input"' in page
     assert 'data-testid="status-panel"' in page
-    assert "감정평가 법령 채팅" in page
+    assert "감정평가 서류 검토 도우미" in page
+    assert "놓치기 쉬운 확인 포인트" in page
 
 
 def test_frontend_keeps_simple_api_structure_without_global_state_manager():

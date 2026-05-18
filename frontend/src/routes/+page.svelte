@@ -14,7 +14,7 @@
   let messages: ChatMessage[] = [
     {
       role: 'assistant',
-      content: '감정평가 법령이나 근거에 대해 질문해 보세요.'
+      content: '작성한 감정평가 서류나 검토하고 싶은 내용을 입력해 주세요. 공식 법령 근거를 찾아 익숙해서 놓치기 쉬운 확인 포인트를 참고용으로 정리해드립니다.'
     }
   ];
 
@@ -60,8 +60,8 @@
 <main class="shell">
   <section class="hero">
     <p class="eyebrow">감정평가 법령 RAG</p>
-    <h1>감정평가 법령 채팅</h1>
-    <p>공식 법령 근거와 인용을 확인하며 감정평가 관련 질문을 해볼 수 있는 대화형 작업공간입니다.</p>
+    <h1>감정평가 서류 검토 도우미</h1>
+    <p>작성한 감정평가 서류에서 익숙해서 놓치기 쉬운 확인 포인트를 공식 법령 근거와 함께 검토할 수 있도록 도와드립니다.</p>
   </section>
 
   <section class="chat-panel" aria-label="채팅 작업공간">
